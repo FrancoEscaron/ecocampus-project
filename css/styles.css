@@ -1,77 +1,73 @@
+:root {
+    --color-primary: #0a25bd;
+    --color-secundary: #2FC8EA;
+    --color-tertiary: #AAFF6D;
+    --color-quaternary: #BCFF2A;
+    --color-quinary: #349e17;
+    --color-six: #f4e0bd;
+
+    --font-title: "Roboto", sans-serif; 
+    --font-text: "Arimo", sans-serif;
+
+
+    
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-:root {
-    --color-primary: #666 ;
-    --color-secundary: ;
-    
+
+[hidden]{
+    display: none !important;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: #b0f59d ;
+    font-family: var(--font-text);
+    background-color: var(--color-six);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
-.header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 10px 20px;
-    box-sizing: border-box;
+
+
+.brand-name strong {
+    color: var(--color-quinary);
 }
 
-.logo-container {
-    width: 100px;
-    height: 100px;
-    box-sizing: border-box;
-    display: flex;
 
-
-}
-
-.title {
-    border: 2px solid rgb(4, 219, 101);
-    margin: 10px;
-    font-size: 20px;
-    padding: 10px;
-    color: #0a25bd;
-    display: flex;
-    justify-content: center;
-    background: #cee7fc;
-}
-strong {
-    color: rgb(38, 179, 9);
-}
-
-.menu ul {
+.main-nav ul {
     list-style: none;
     display: flex;
     margin: 0;
     padding: 0;
 }
 
-.menu li {
+.main-nav li {
     margin-right: 15px;
 }
 
-.menu a {
+.main-nav a {
     text-decoration: none;
     color: rgb(33, 146, 10);
     padding: 10px 15px;
     display: block;
     background: #f5f4c7;
 }
-.menu a:hover {
+.main-nav a:hover {
     background: #efeeb4;
 }
 
-#cursos {
-    color: rgb(63, 114, 214);
+
+@media (min-width: 768px) {
+    
 }
 
-#impacto {
-    color: rgb(63, 113, 238);
-}
+@media (min-width: 1200px){
 
-@media (min-width) {};
+}

@@ -1,107 +1,3 @@
-# MAQUETADO HTML GEMINI
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    </head>
-<body>
-
-    <header>
-        <div class="logo-container">
-            </div>
-        <nav>
-            <ul>
-                <li><a href="#cursos">Cursos</a></li>
-                <li><a href="#como-funciona">¿Cómo pago con acciones?</a></li>
-                <li><a href="#impacto">Nuestro Impacto</a></li>
-            </ul>
-        </nav>
-        <div class="user-actions">
-            </div>
-    </header>
-
-    <main>
-        
-        <section id="hero">
-            <div class="hero-content">
-                <h1>Aprende y cambia el mundo. Paga tus cursos con acciones sustentables.</h1>
-                <p>Usa tu dinero, tu esfuerzo ecológico, o una mezcla de ambos.</p>
-                <button class="cta-primary">Explorar Cursos</button>
-            </div>
-            <div class="hero-image">
-                </div>
-        </section>
-
-        <section id="como-funciona">
-            <h2>El Sistema de Pago EcoCampus</h2>
-            <div class="steps-container">
-                <article class="step">
-                    <h3>1. Elige tu curso</h3>
-                    <p>Encuentra tu pasión en nuestro catálogo.</p>
-                </article>
-                <article class="step">
-                    <h3>2. Define tu método de pago</h3>
-                    <p>Selecciona qué porcentaje pagarás con dinero y qué porcentaje con acciones (ej. plantar árboles, reciclaje).</p>
-                </article>
-                <article class="step">
-                    <h3>3. Sube tu evidencia</h3>
-                    <p>Valida tu impacto en nuestro sistema.</p>
-                </article>
-                <article class="step">
-                    <h3>4. ¡Desbloquea tu aprendizaje!</h3>
-                </article>
-            </div>
-        </section>
-
-        <section id="cursos-destacados">
-            <h2>Cursos Populares</h2>
-            <div class="course-grid">
-                
-                <article class="course-card">
-                    <div class="course-thumbnail"></div>
-                    <div class="course-info">
-                        <h3>Introducción al Desarrollo Web</h3>
-                        <p>Duración: 4 semanas</p>
-                    </div>
-                    <div class="course-pricing">
-                        <span class="price-money">$50 USD</span>
-                        <span class="price-separator">o</span>
-                        <span class="price-eco">25 Eco-Acciones + $25 USD</span>
-                    </div>
-                    <button>Ver opciones de inscripción</button>
-                </article>
-                </div>
-        </section>
-
-        <section id="impacto-comunidad">
-            <h2>Lo que hemos logrado juntos</h2>
-            <div class="stats-container">
-                <div class="stat"><span>1,500</span> Árboles plantados</div>
-                <div class="stat"><span>500 kg</span> Plástico reciclado</div>
-                <div class="stat"><span>3,000</span> Horas de educación</div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="footer-links">
-            <section class="legal">
-                <h4>Legal</h4>
-                <ul>
-                    <li>Términos y condiciones</li>
-                    <li>Política de validación de acciones</li>
-                </ul>
-            </section>
-            <section class="socials">
-                </section>
-        </div>
-        <div class="footer-copyright">
-            <p>&copy; 2026 EcoCampus. Educación que regenera el planeta.</p>
-        </div>
-    </footer>
-
-</body>
-</html>
 
 # Para llevar este maquetado al siguiente nivel considerar lo siguiente:
 
@@ -802,3 +698,33 @@ En pantalla grande (escritorio): Caben 3 o 4 tarjetas por fila.
 En tablet: Se reajusta a 2 tarjetas por fila.
 
 En celular: Al no haber 300px disponibles para poner dos tarjetas lado a lado, automáticamente se apilan una debajo de otra ocupando el 100% del ancho móvil.
+
+
+# Arreglar header
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.nav ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
