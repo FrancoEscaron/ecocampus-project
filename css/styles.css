@@ -1,37 +1,37 @@
 :root {
-    --color-primary: #BDDEAB;
+    --color-body: #BDDEAB;
     --color-secundary: #A3D189;
     --color-tertiary: #D0F4C3;
-    --color-quaternary: #D7EBCC;
-    --color-quinary: #8CE36D;
+    --color-footer: #D7EBCC;
+    --color-strong-name: #377121;
 
     --color-six: #f4e0bd;
-    --color-seven: #569C59;
+    --color-button: #569C59;
     --color-eight: #F9F1D9;
-    --color-nine: #F2EECB;
+    --color-button-primary: #F2EECB;
     --color-ten: #9C9983;
-    --color-eleven: #6F9C67;
-    --color-twelve: #AFE0B5;
+    --color-display: #6F9C67;
+    --color-title-main: #AFE0B5;
 
     --color-thirteen: #B2EC9C;
-    --color-fourteen: #EEFBEA;
-    --color-fifteen: #D3EFCC;
+    --color-description-main: #EEFBEA;
+    --color-header: #D3EFCC;
     --color-sixteen: #D7F0D7;
-    --color-seventeen: #F0F8F2;
+    --color-text-course: #064f97;
     --color-eighteen: #7FC4F2;
     --color-nineteen: #BFE3FA;
-    --color-twenty: #EAF6FF;
-    --color-twentytwo: #3E8FD6;
+    --color-text-footer: #046735;
+    --color-name: #04447d;
     --color-twentythree: #A7E0DB;
-    --color-twentyfour: #5FB0C9;
+    --color-btn-primary: #5FB0C9;
     --color-twentyfive: #CFF0EA;
     --color-twentysix: #88C9C4;
-    --color-twentyseven: #BEE1E6;
+    --color-cards: #d1fffa;
     --color-twentyeight: #8FE1B4;
     --color-twentynine: #F8F6F6;
-    --color-thirty: #8BE4B2;
+    --color-strong-description: #8BE4B2;
     --color-thirtyone: #FDE2E4;
-    --color-thirtytwo: #FAD2E1;
+    --color-title-course: #1447e0c6;
     --color-thirtythree: #E2ECE9;
     --color-thirtyfour: #BEE1E6;
     --color-thirtyfive: #DFE7FD;
@@ -64,7 +64,7 @@ html {
 
 body {
     font-family: var(--font-text);
-    background-color: var(--color-six);
+    background-color: var(--color-body);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
 }
@@ -103,15 +103,15 @@ h4 {
 }
 
 .button-primary {
-    background-color: var(--color-eleven);
-    color: var(--color-eight);
+    background-color: var(--color-btn-primary);
+    color: var(--color-button-primary);
     box-shadow: var(--shadow);
 }
 
 .button-primary:hover {
-    background-color: var(--color-twelve);
+    background-color: var(--color-btn-primary);
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0, 130, 0, 0.45);
+    box-shadow: 0 12px 28px rgba(0, 150, 250, 0.65);
 }
 
 .button-primary:active {
@@ -119,34 +119,38 @@ h4 {
 }
 
 .button-secondary {
-    background-color: var(--color-nine);
-    color: var(--color-eleven);
+    background-color: var(--color-button);
+    color: var(--color-button-primary);
     box-shadow: var(--shadow);
-    border-color: var(--color-seven);
 }
 
 .button-secondary:hover {
-    background-color: var(--color-six);
-    color: var(--color-seven);
+    background-color: var(--color-button);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 60, 0, 0.80);
+}
+
+.button-secondary:active {
+    transform: translateY(0);
 }
 
 .main-header {
     position: sticky;
     top: 0;
     z-index: 50;
-    background-color: var(--color-eleven);
-    color: var(--color-six);
+    background-color: var(--color-header);
+    color: var(--color-button);
     box-shadow: var(--shadow);
 }
 
 .inner-header {
     max-width: var(--width-max);
     margin: 0 auto;
-    padding: 0.9rem 1.2rem;
+    padding: 0.5rem 0.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .brand {
@@ -159,11 +163,16 @@ h4 {
 }
 
 .brand-logo {
-    font-size: 1.5rem;
+    width: 100px;
+    height: auto;
+}
+
+.brand-name {
+    color: var(--color-name);
 }
 
 .brand-name strong {
-    color: var(--color-quinary);
+    color: var(--color-strong-name);
 }
 
 .main-nav {
@@ -197,7 +206,7 @@ h4 {
 }
 
 .main-nav a:hover {
-    color: var(--color-primary)
+    color: var(--color-display)
 }
 
 .nav-icon {
@@ -213,7 +222,7 @@ h4 {
 .nav-icon span {
     width: 26px;
     height: 3px;
-    background-color: var(--color-quaternary);
+    background-color: var(--color-button);
     border-radius: 2px;
     transition: transform var(--transition);
 }
@@ -225,7 +234,7 @@ h4 {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: var(--color-twelve);
+    color: var(--color-title-main);
     background-image: url("/assets/img/pollution.jpeg");
     background-size: cover;
     background-position: center;
@@ -237,8 +246,8 @@ h4 {
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg,
-            rgba(0, 30, 10, 0.10),
-            rgba(0, 20, 15, 0.10));
+            rgba(0, 15, 10, 0.60),
+            rgba(0, 15, 10, 0.40));
 }
 
 .hero-content {
@@ -255,7 +264,7 @@ h4 {
 .hero-subtitle {
     font-size: 1.3rem;
     margin-bottom: 1.8rem;
-    color: var(--color-eight);
+    color: var(--color-description-main);
 }
 
 .hero-description-main {
@@ -266,12 +275,12 @@ h4 {
 
 .hero-description {
     font-size: 1.2rem;
-    margin-bottom: 1.8 rem;
-    color: var(--color-eight);
+    margin-bottom: 1.8rem;
+    color: var(--color-description-main);
 }
 
 .hero-description strong {
-    color: var(--color-primary);
+    color: var(--color-strong-description);
 }
 
 .hero-actions {
@@ -296,12 +305,12 @@ h4 {
 
 .section-title {
     font-size: 1.9rem;
-    color: var(--color-twentyfour);
+    color: var(--color-title-course);
     margin-bottom: 0.7rem;
 }
 
 .section-description {
-    color: var(--color-twentynine);
+    color: var(--color-text-course);
 }
 
 .cards-grid {
@@ -311,7 +320,7 @@ h4 {
 }
 
 .course-card {
-    background-color: var(--color-fourteen);
+    background-color: var(--color-cards);
     border-radius: var(--radio);
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -375,8 +384,8 @@ h4 {
 }
 
 .site-footer {
-    background-color: var(--color-twentysix);
-    color: var(--color-twenty);
+    background-color: var(--color-footer);
+    color: var(--color-text-footer);
     padding: 2.5rem 1.2rem 1.5rem;
 }
 
@@ -390,7 +399,7 @@ h4 {
 
 .footer-cont h4 {
     margin-bottom: 0.5rem;
-    color: var(--color-ten);
+    color: var(--color-seven);
 }
 
 .legal {
@@ -419,7 +428,7 @@ h4 {
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     text-align: center;
     font-size: 0.85rem;
-    color: var(--color-seventeen);
+    color: var(--color-text-footer);
 }
 
 @media (min-width: 768px) {
@@ -437,13 +446,17 @@ h4 {
 
     .main-nav ul {
         flex-direction: row;
-        gap: 1.3rem;
+        gap: 1rem;
         padding: 0;
     }
 
     .main-nav a {
         border-bottom: none;
         padding: 0;
+    }
+
+    .brand-name {
+        display: none;
     }
 
     .hero-title {
@@ -462,7 +475,7 @@ h4 {
 
 @media (min-width: 1200px) {
     .hero-title {
-        font-size: 3.7rem;
+        font-size: 3.5rem;
     }
 
     .cards-grid {
