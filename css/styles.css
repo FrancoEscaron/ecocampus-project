@@ -1,11 +1,13 @@
 :root {
     --color-body: #BDDEAB;
     --color-secundary: #A3D189;
-    --color-tertiary: #D0F4C3;
+    --color-card-dt: #510251be;
     --color-footer: #D7EBCC;
     --color-strong-name: #377121;
 
-    --color-six: #f4e0bd;
+    --color-span-bg: #32643280;
+
+    --color-card-desc: #436b27;
     --color-button: #569C59;
     --color-eight: #F9F1D9;
     --color-button-primary: #F2EECB;
@@ -18,21 +20,21 @@
     --color-header: #D3EFCC;
     --color-sixteen: #D7F0D7;
     --color-text-course: #064f97;
-    --color-eighteen: #7FC4F2;
-    --color-nineteen: #BFE3FA;
+    --color-vld-card-name: #3823f4;
+    --color-vld-card-desc: #07c0649a;
     --color-text-footer: #046735;
     --color-name: #04447d;
     --color-twentythree: #A7E0DB;
     --color-btn-primary: #5FB0C9;
     --color-twentyfive: #CFF0EA;
-    --color-twentysix: #88C9C4;
+    --color-networks: #88C9C4;
     --color-cards: #d1fffa;
-    --color-twentyeight: #8FE1B4;
-    --color-twentynine: #F8F6F6;
+    --color-card-title: #8FE1B4;
+    --color-span-txt: #F8F6F6;
     --color-strong-description: #8BE4B2;
-    --color-thirtyone: #FDE2E4;
+    --color-vld-desc: #df1f55ad;
     --color-title-course: #1447e0c6;
-    --color-thirtythree: #E2ECE9;
+    --color-title-vld: #0f900f97;
     --color-thirtyfour: #BEE1E6;
     --color-thirtyfive: #DFE7FD;
 
@@ -353,7 +355,7 @@ h4 {
     top: 0.8rem;
     left: 0.8rem;
     background-color: rgba(0, 180, 0, 0.30);
-    color: var(--color-twentytwo);
+    color:var(--color-span-txt);
     font-size: 0.75rem;
     font-weight: 700;
     padding: 0.3rem 0.7rem;
@@ -367,20 +369,102 @@ h4 {
 
 .course-name {
     font-size: 1.50rem;
-    color: var(--color-thirty);
+    color: var(--color-card-title);
     margin-bottom: 0.35rem;
 }
 
 .course-duration {
     font-weight: 700;
-    color: var(--color-seven);
+    color: var(--color-card-dt);
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
 
 .course-description {
-    color: var(--color-twentyfour);
+    color: var(--color-card-desc);
     font-size: 0.95rem;
+}
+
+.validate-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+}
+
+.validate-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.7rem;
+    color: var(--color-title-vld)
+}
+
+.validate-description {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--color-vld-desc);
+}
+ 
+.cards-val-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.validate-card {
+    border-radius: var(--radio);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+    background-color: var(--color-twentythree);
+}
+
+.validate-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px);
+}
+
+.validate-media {
+    position: relative;
+    overflow: hidden;
+}
+
+.validate-media img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.validate-card:hover .validate-media img {
+    transform: scale(1.06);
+}
+
+.validate-tag {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    backdrop-filter: blur(2px);
+    border-radius: 99px;
+    font-size: 0.90rem;
+    font-weight: 700;
+    background-color: var(--color-span-bg);
+    color: var(--color-span-txt);
+}
+
+.validate-body {
+    padding: 1.2rem;
+}
+
+.validate-name {
+    font-size: 1.50rem;
+    margin-bottom: 0.35rem;
+    color: var(--color-vld-card-name);
+}
+
+.validate-desc {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-vld-card-desc);
 }
 
 .site-footer {
@@ -399,7 +483,7 @@ h4 {
 
 .footer-cont h4 {
     margin-bottom: 0.5rem;
-    color: var(--color-seven);
+    color: var(--color-text-footer);
 }
 
 .legal {
@@ -418,14 +502,14 @@ h4 {
 }
 
 .networks a:hover {
-    color: var(--color-seven);
+    color: var(--color-networks);
 }
 
 .copyright {
     max-width: var(--width-max);
     margin: 2rem auto 0;
     padding-top: 1.2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(4, 59, 1, 0.35);
     text-align: center;
     font-size: 0.85rem;
     color: var(--color-text-footer);
@@ -467,6 +551,10 @@ h4 {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .cards-val-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .inner-footer {
         flex-direction: row;
         justify-content: space-between;
@@ -479,6 +567,10 @@ h4 {
     }
 
     .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .cards-val-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 
