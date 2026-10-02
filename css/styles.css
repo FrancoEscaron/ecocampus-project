@@ -1,53 +1,57 @@
 :root {
-    --color-body: #BDDEAB;
-    --color-secundary: #A3D189;
-    --color-card-dt: #510251be;
-    --color-footer: #D7EBCC;
-    --color-strong-name: #377121;
+    /* Color General */
+    --color-body: #F4F9F5;
+    --color-header: #FFFFFF;
+    --color-footer: #062C22;
 
-    --color-span-bg: #32643280;
+    /* Color Nav */
+    --color-nav-hover: #10B981;
+    --color-nav: #062C22;
+    --color-bg-btn: #10B981;
+    --color-navBgc-open: #062C22;
 
-    --color-card-desc: #436b27;
-    --color-button: #569C59;
-    --color-eight: #F9F1D9;
-    --color-button-primary: #F2EECB;
-    --color-ten: #9C9983;
-    --color-display: #6F9C67;
-    --color-title-main: #AFE0B5;
+    /* Botones */
+    --color-button: #10B981;
+    --color-button-txt: #FFFFFF;
+    --color-btn-primary: #0A4D68;
 
-    --color-thirteen: #B2EC9C;
-    --color-description-main: #EEFBEA;
-    --color-header: #D3EFCC;
-    --color-sixteen: #D7F0D7;
-    --color-text-course: #064f97;
-    --color-vld-card-name: #3823f4;
-    --color-vld-card-desc: #07c0649a;
-    --color-text-footer: #046735;
-    --color-name: #04447d;
-    --color-twentythree: #A7E0DB;
-    --color-btn-primary: #5FB0C9;
-    --color-twentyfive: #CFF0EA;
-    --color-networks: #88C9C4;
-    --color-cards: #d1fffa;
-    --color-card-title: #8FE1B4;
-    --color-span-txt: #F8F6F6;
-    --color-strong-description: #8BE4B2;
-    --color-vld-desc: #df1f55ad;
-    --color-title-course: #1447e0c6;
-    --color-title-vld: #0f900f97;
-    --color-thirtyfour: #BEE1E6;
-    --color-thirtyfive: #DFE7FD;
+    /* Colores Textos */
+    --color-name: #062C22;
+    --color-strong-name: #10B981;
+    --color-text-footer: #E2F1E7;
+    --color-description-main: #E2F1E7;
+    --color-strong-description: #AFE0B5;
+    --color-title-main: #10B981;
+
+    /* Color Cards */
+    --color-cards: #FFFFFF;
+    --color-card-title: #062C22;
+    --color-card-dt: #0A4D68;
+    --color-card-desc: #374151;
+    --color-title-course: #062C22;
+    --color-text-course: #4B5563;
+
+    /* Color Validación */
+    --color-twentythree: #FFFFFF; /* Cambiar nombre variable por fondo de card validate */
+    --color-title-vld: #062C22;
+    --color-vld-desc: #0A4D68;
+    --color-vld-card-name: #062C22;
+    --color-vld-card-desc: #374151;
+
+    /* Color Links y span-cards */
+    --color-span-bg: #062c22d9;
+    --color-span-txt: #FFFFFF;
+    --color-networks: #10B981;
 
     --font-title: "Roboto", sans-serif;
     --font-text: "Arimo", sans-serif;
 
     --radio: 14px;
     --radio-sm: 8px;
-    --shadow: 0 8px 24px rgba(74, 47, 27, 0.12);
-    --shadow-lg: 0 16px 40px rgba(74, 47, 27, 0.22);
+    --shadow: 0 4px 20px rgba(6, 44, 34, 0.08);
+    --shadow-lg: 0 16px 40px rgba(6, 44, 34, 0.15);
     --width-max: 1200px;
     --transition: 0.2s ease;
-
 }
 
 * {
@@ -106,14 +110,14 @@ h4 {
 
 .button-primary {
     background-color: var(--color-btn-primary);
-    color: var(--color-button-primary);
+    color: var(--color-button-txt);
     box-shadow: var(--shadow);
 }
 
 .button-primary:hover {
-    background-color: var(--color-btn-primary);
+    background-color: #083C52;
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0, 150, 250, 0.65);
+    box-shadow: 0 12px 28px rgba(10, 77, 104, 0.45);
 }
 
 .button-primary:active {
@@ -122,14 +126,14 @@ h4 {
 
 .button-secondary {
     background-color: var(--color-button);
-    color: var(--color-button-primary);
+    color: var(--color-button-txt);
     box-shadow: var(--shadow);
 }
 
 .button-secondary:hover {
-    background-color: var(--color-button);
+    background-color: #059669; /* Cambiar este color por variable y el otro hover del btn primary tambien */
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0, 60, 0, 0.80);
+    box-shadow: 0 12px 28px rgba(16, 185, 129, 0.45);
 }
 
 .button-secondary:active {
@@ -141,7 +145,7 @@ h4 {
     top: 0;
     z-index: 50;
     background-color: var(--color-header);
-    color: var(--color-button);
+    color: var(--color-nav);
     box-shadow: var(--shadow);
 }
 
@@ -182,7 +186,7 @@ h4 {
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--color-primary);
+    background-color: var(--color-navBgc-open);
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
@@ -190,6 +194,7 @@ h4 {
 
 .main-nav.is-open {
     max-height: 420px;
+    color: #FFFFFF;
 }
 
 .main-nav ul {
@@ -208,7 +213,7 @@ h4 {
 }
 
 .main-nav a:hover {
-    color: var(--color-display)
+    color: var(--color-nav-hover)
 }
 
 .nav-icon {
@@ -224,7 +229,7 @@ h4 {
 .nav-icon span {
     width: 26px;
     height: 3px;
-    background-color: var(--color-button);
+    background-color: var(--color-span-bg);
     border-radius: 2px;
     transition: transform var(--transition);
 }
@@ -248,8 +253,8 @@ h4 {
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg,
-            rgba(0, 15, 10, 0.60),
-            rgba(0, 15, 10, 0.40));
+            rgba(6, 44, 34, 0.60),
+            rgba(0, 0, 0, 0.99));
 }
 
 .hero-content {
@@ -465,6 +470,12 @@ h4 {
         font-size: 1rem;
         font-weight: 600;
         color: var(--color-vld-card-desc);
+}
+
+#full-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 }
 
 .site-footer {

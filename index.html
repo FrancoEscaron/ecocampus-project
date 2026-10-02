@@ -41,8 +41,8 @@
                     <li><a href="/Impact.html">Nuestro impacto</a></li>
                     <li><a href="#testimonios">Testimonios</a></li>
                     <li><a href="/faq.html">Preguntas frecuentes</a></li>
-                    <li><a href="#socios">Nuestros socios</a></li>
                     <li><a href="#contacto">Contacto</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -91,6 +91,19 @@
                 </article>
             </div>
         </section>
+        <section>
+            <form action="#" class="" id="full-form">
+                <label for="nombre">Nombre:</label>
+                <input type="text" name="nombre" id="nombre" placeholder="Tu nombre" required>
+                <label for="apellido">Apellido:</label>
+                <input type="text" name="apellido" id="apellido" placeholder="Tu apellido" required>
+                <label for="correo">Correo electrónico</label>
+                <input type="email" name="correo" id="correo" placeholder="ejemplo@correo.com" required>
+                <label for="mensaje">Mensaje:</label>
+                <textarea name="mensaje" id="mensaje" rows="4" placeholder="Escribe tu mensaje" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
     </main>
 
     <footer class="site-footer" id="contacto">
@@ -122,6 +135,7 @@
         </div>
         <p class="copyright">&copy; 2026 EcoCampus. Todos los derechos reservados.</p>
     </footer>
+    <script src="/js/script.js"></script>
 </body>
 
 </html>
