@@ -1,3 +1,7 @@
 README.md
 EcoCampus.md
+<<<<<<< HEAD
 js
+=======
+backend/node_modules
+>>>>>>> ed6fb5b (Update: New files were added to gitignore)
