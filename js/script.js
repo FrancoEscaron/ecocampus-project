@@ -1,4 +1,4 @@
-const {suma, resta, multiplicacion, division} = require("./calculator");
+/* const {suma, resta, multiplicacion, division} = require("./calculator"); */
 
 const navToggle = document.getElementById("navIcon");
 const mainNav = document.getElementById("mainNav");
