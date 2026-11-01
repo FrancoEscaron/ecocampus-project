@@ -40,108 +40,116 @@
                     <li><a href="/impact.html">Nuestro impacto</a></li>
                     <li><a href="/faq.html">Preguntas frecuentes</a></li>
                     <li><a href="#contacto">Contacto</a></li>
-                    <li><a href="/account.html">Ingresar</a></li>
+                    <li><a href="/account.html" id="auth-link">Ingresar</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+    <main>
+        <section class="section-courses" id="courses">
+            <div class="section-head">
+                <h2 class="section-title">Nuestros cursos </h2>
+                <p class="section-description">Aquí encontrará todos nuestros cursos disponibles para que empieces tu
+                    ruta
+                    de aprendizaje</p>
+            </div>
 
-    <section class="section-courses" id="courses">
-        <div class="section-head">
-            <h2 class="section-title">Nuestros cursos </h2>
-            <p class="section-description">Aquí encontrará todos nuestros cursos disponibles para que empieces tu ruta
-                de aprendizaje</p>
-        </div>
-        <div class="cards-grid">
-            <article class="course-card">
-                <div class="course-media">
-                    <img src="/assets/img/Desarrollo Web.jpg"
-                        alt="Persona trabajando en una computadora con código de fondo">
-                    <span class="course-tag">10 módulos</span>
-                </div>
-                <div class="course-body">
-                    <h3 class="course-name"> Desarrollo Web</h3>
-                    <p class="course-duration">Duración: 20 semanas</p>
-                    <p class="course-description">Aprenderás los fundamentos básicos de HTML, CSS y JavaScript para
-                        empezar a desarrollar tu página web.</p>
-                </div>
-            </article>
+            <div class="cards-grid" id="courses-grid">
+                <article class="course-card" data-course-id="desarrollo-web">
+                    <div class="course-media">
+                        <img src="/assets/img/Desarrollo Web.jpg"
+                            alt="Persona trabajando en una computadora con código de fondo">
+                        <span class="course-tag">10 módulos</span>
+                    </div>
+                    <div class="course-body">
+                        <h3 class="course-name"> Desarrollo Web</h3>
+                        <p class="course-duration">Duración: 20 semanas</p>
+                        <p class="course-description">Aprenderás los fundamentos básicos de HTML, CSS y JavaScript para
+                            empezar a desarrollar tu página web.</p>
+                    </div>
+                </article>
 
-            <article class="course-card">
-                <div class="course-media">
-                    <img src="/assets/img/Testing.jpg" alt="Computadora con una lupa y una mariquita">
-                    <span class="course-tag">8 módulos</span>
-                </div>
-                <div class="course-body">
-                    <h3 class="course-name">Testing de Software</h3>
-                    <p class="course-duration">Duración: 16 semanas</p>
-                    <p class="course-description">Aprenderás los fundamentos y las herramientas necesarias para
-                        desempeñarte como un QA tester.</p>
-                </div>
-            </article>
+                <article class="course-card" data-course-id="testing-software">
+                    <div class="course-media">
+                        <img src="/assets/img/Testing.jpg" alt="Computadora con una lupa y una mariquita">
+                        <span class="course-tag">8 módulos</span>
+                    </div>
+                    <div class="course-body">
+                        <h3 class="course-name">Testing de Software</h3>
+                        <p class="course-duration">Duración: 16 semanas</p>
+                        <p class="course-description">Aprenderás los fundamentos y las herramientas necesarias para
+                            desempeñarte como un QA tester.</p>
+                    </div>
+                </article>
 
-            <article class="course-card">
-                <div class="course-media">
-                    <img src="/assets/img/Reciclaje.jpg" alt="Mujer reciclando">
-                    <span class="course-tag">4 módulos</span>
-                </div>
-                <div class="course-body">
-                    <h3 class="course-name">Cómo Reciclar Desde el Hogar</h3>
-                    <p class="course-duration">Duración: 6 semanas</p>
-                    <p class="course-description">Aquí aprenderás a reciclar para hacer una gran diferencia empezando
-                        por un lugar donde no solemos hacerlo: ¡Nuestro Hogar!</p>
-                </div>
-            </article>
+                <article class="course-card" data-course-id="reciclaje-hogar">
+                    <div class="course-media">
+                        <img src="/assets/img/Reciclaje.jpg" alt="Mujer reciclando">
+                        <span class="course-tag">4 módulos</span>
+                    </div>
+                    <div class="course-body">
+                        <h3 class="course-name">Cómo Reciclar Desde el Hogar</h3>
+                        <p class="course-duration">Duración: 6 semanas</p>
+                        <p class="course-description">Aquí aprenderás a reciclar para hacer una gran diferencia
+                            empezando
+                            por un lugar donde no solemos hacerlo: ¡Nuestro Hogar!</p>
+                    </div>
+                </article>
 
-            <article class="course-card">
-                <div class="course-media">
-                    <img src="/assets/img/Finanzas.jpg" alt="Una chanchita con dinero dentro y un gráfico de inversión">
-                    <span class="course-tag"> 3 módulos</span>
-                </div>
-                <div class="course-body">
-                    <h3 class="course-name">Invirtiendo Mi Dinero: Formas de hacerlo y no perder en el intento.</h3>
-                    <p class="course-duration">Duración: 8 semanas</p>
-                    <p class="course-description">Si quieres empezar a invertir tus ahorros, pero tienes miedo a
-                        perderlo en el intento, este curso es para ti.</p>
-                </div>
-            </article>
+                <article class="course-card" data-course-id="finanzas-personales">
+                    <div class="course-media">
+                        <img src="/assets/img/Finanzas.jpg"
+                            alt="Una chanchita con dinero dentro y un gráfico de inversión">
+                        <span class="course-tag"> 3 módulos</span>
+                    </div>
+                    <div class="course-body">
+                        <h3 class="course-name">Invirtiendo Mi Dinero: Formas de hacerlo y no perder en el intento.</h3>
+                        <p class="course-duration">Duración: 8 semanas</p>
+                        <p class="course-description">Si quieres empezar a invertir tus ahorros, pero tienes miedo a
+                            perderlo en el intento, este curso es para ti.</p>
+                    </div>
+                </article>
 
-            <article class="course-card">
-                <div class="course-media">
-                    <img src="/assets/img/Inglés.jpg"
-                        alt="mesa con material de estudio y un pizarrón con una fraze en inglés">
-                    <span class="course-tag">7 módulos</span>
-                </div>
-                <div class="course-body">
-                    <h3 class="course-name">Inglés para principiantes</h3>
-                    <p class="course-duration">Duración: 12 semanas</p>
-                    <p class="course-description">Aprenderás las bases necesarias para poder comunicarte de forma oral y
-                        escrita con frases simples pero bien estructuradas.</p>
-                </div>
-            </article>
+                <article class="course-card" data-course-id="ingles-principiantes">
+                    <div class="course-media">
+                        <img src="/assets/img/Inglés.jpg"
+                            alt="mesa con material de estudio y un pizarrón con una fraze en inglés">
+                        <span class="course-tag">7 módulos</span>
+                    </div>
+                    <div class="course-body">
+                        <h3 class="course-name">Inglés para principiantes</h3>
+                        <p class="course-duration">Duración: 12 semanas</p>
+                        <p class="course-description">Aprenderás las bases necesarias para poder comunicarte de forma
+                            oral y
+                            escrita con frases simples pero bien estructuradas.</p>
+                    </div>
+                </article>
 
-            <article class="course-card">
-                <div class="course-media">
-                    <img src="/assets/img/SocioEmocional.jpg" alt="Personas conversando amigablemente entre ellas">
-                    <span class="course-tag">2 módulos</span>
-                </div>
-                <div class="course-body">
-                    <h3 class="course-name">Habiliades SocioEmocionales</h3>
-                    <p class="course-duration">Duración: 4 semanas</p>
-                    <p class="course-description">En un mundo donde cada vez estamos más dividos es necesario aprender a
-                        reconocer nuestras emociones y transmitirlas de forma correcta para poder relacionarnos con el
-                        otro</p>
-                </div>
-            </article>
-        </div>
-    </section>
+                <article class="course-card" data-course-id="habilidades-socioemocionales">
+                    <div class="course-media">
+                        <img src="/assets/img/SocioEmocional.jpg" alt="Personas conversando amigablemente entre ellas">
+                        <span class="course-tag">2 módulos</span>
+                    </div>
+                    <div class="course-body">
+                        <h3 class="course-name">Habiliades SocioEmocionales</h3>
+                        <p class="course-duration">Duración: 4 semanas</p>
+                        <p class="course-description">En un mundo donde cada vez estamos más dividos es necesario
+                            aprender a
+                            reconocer nuestras emociones y transmitirlas de forma correcta para poder relacionarnos con
+                            el otro</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
 
     <section class="contact-section" id="contacto">
         <div class="form-container">
             <h2 class="contact-title">Ponte en contacto</h2>
             <p class="contact-subtitle">¿Tienes alguna duda o propuesta? Escríbenos.</p>
 
-            <form action="#" class="form" id="full-form">
+            <form action="/contacto" class="form" id="full-form">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nombre">Nombre:</label>
@@ -195,7 +203,7 @@
         </div>
         <p class="copyright">&copy; 2026 EcoCampus. Todos los derechos reservados.</p>
     </footer>
-   
+
     <script src="/js/script.js"></script>
 </body>
 
