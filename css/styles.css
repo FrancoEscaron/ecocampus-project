@@ -46,6 +46,16 @@
     --color-span-bg: #062c22d9;
     --color-span-txt: #FFFFFF;
     --color-networks: #10B981;
+    /* Color formulario */
+    --color-form-title: #062C22;
+    --color-form-subtitle: #083C52;
+    --color-form-input-placeholder: #9CA3AF;
+    --color-form-btn: #13997a;
+    --color-form-btn-color: #e4e4e4;
+    --color-form-container: #d3e3de;
+    --color-form-label: #02311e;
+    --color-form-input-color: #144a37;
+    --color-form-input-bgc: #cde6f0;
 
     --font-title: "Roboto", sans-serif;
     --font-text: "Arimo", sans-serif;
@@ -548,21 +558,21 @@ h4 {
 
 .contact-title {
     font-size: 1.8rem;
-    color: var(--color-name);
+    color: var(--color-form-title);
     text-align: center;
     margin-bottom: 0.3rem;
 }
 
 .contact-subtitle {
     text-align: center;
-    color: #083C52;
+    color: var(--color-form-subtitle);
     margin-bottom: 1.8rem;
     font-size: 0.95rem;
 }
 
 
 .form-container {
-    background-color: #059669;
+    background-color: var(--color-form-container);
     padding: 1.8rem 1.4rem;
     border-radius: var(--radio);
     box-shadow: var(--shadow);
@@ -591,7 +601,7 @@ h4 {
 .form label{
     font-size: 0.9rem;
     font-weight: 700;
-    color: #062C22;
+    color: #02311e;
 }
 
 .form input, textarea, select {
@@ -599,8 +609,8 @@ h4 {
     font-family: var(--font-text);
     font-size: 0.95rem;
     padding: 0.8rem 1rem;
-    color: #04ffb0;
-    background-color: #13adef;
+    color: #144a37;
+    background-color: #cde6f0;
     border: 1.5px solid rgba(6, 44, 34, 0.15);
     border-radius: var(--radio-sm);
     transition: border-color var(--transition), box-shadow var(--transition);
@@ -612,7 +622,7 @@ h4 {
 }
 
 .form input::placeholder, textarea::placeholder {
-    color: #9CA3AF;
+    color: var(--color-form-input-placeholder);
 }
 
 .form input:focus, 
@@ -631,8 +641,8 @@ h4 {
 .submit-btn {
     width: 100%;   
     padding: 0.85rem 1.6rem;
-    background-color: #180596;
-    color: #9CA3AF;
+    background-color: var(--color-form-btn);
+    color: var(--color-form-btn-color);
     font-family: var(--font-text);
     font-size: 1rem;
     font-weight: 800;
@@ -644,7 +654,7 @@ h4 {
 }
 
 .submit-btn:hover {
-    background-color: red;
+    background-color: rgb(25, 72, 58);
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(10, 77, 104, 0.3);
 }
@@ -701,6 +711,82 @@ h4 {
     text-align: center;
     font-size: 0.85rem;
     color: var(--color-text-footer);
+}
+
+/* Slide de pagos y contenidos del curso */
+
+.course-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 44, 34, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1.2rem;
+}
+
+.course-modal-box {
+    background-color: var(--color-form-container);
+    padding: 2.5rem 2.2rem;
+    border-radius: var(--radio);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 550px;
+    position: relative;
+    animation: modalSlideUp 0.3s ease;
+}
+
+.course-modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-form-title);
+    cursor: pointer;
+}
+
+.course-modal-title {
+    font-size: 1.8rem;
+    color: var(--color-form-title);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-title);
+}
+
+.course-modal-text {
+    color: var(--color-form-subtitle);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.course-secret-content-box {
+    background-color: #ffffff;
+    padding: 1.2rem;
+    border-radius: var(--radio-sm);
+    border: 1.5px solid rgba(6, 44, 34, 0.15);
+    color: var(--color-card-desc);
+    margin-top: 1rem;
+    white-space: pre-line;
+}
+
+.modal-action-btn {
+    width: 100%;
+    margin-top: 1.2rem;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (min-width: 768px) {
