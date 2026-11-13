@@ -1,3 +1,8 @@
 README.md
 EcoCampus.md
 backend/node_modules
+.env
+.env.*
+!.env.example
+backend/uploads/*
+!backend/uploads/.gitkeep
