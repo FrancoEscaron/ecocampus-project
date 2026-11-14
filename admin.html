@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="EcoCampus es una plataforma donde accederás a diversos cursos pudiendo pagar con acciones sustentables.">
+    <title>EcoCampus - Panel de Administración</title>
+    <link rel="icon" href="assets/favicons/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-icon-180x180.png">
+    <link rel="manifest" href="assets/favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+
+    <header class="main-header" id="inicio">
+        <div class="inner-header">
+            <a class="brand" href="/index.html" aria-label="EcoCampus">
+                <img class="brand-logo" aria-hidden="true" src="assets/icons/EcoCampus.png" alt="logo de ecocampus">
+                <span class="brand-name"><strong>Eco</strong>Campus</span>
+            </a>
+            <button class="nav-icon" id="navIcon" aria-label="Abrir menú" aria-controls="mainNav" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="/index.html">Inicio</a></li>
+                    <li><a href="/validate.html">Validar acciones</a></li>
+                    <li><a href="/courses.html">Cursos</a></li>
+                    <li><a href="/impact.html">Nuestro impacto</a></li>
+                    <li><a href="/faq.html">Preguntas frecuentes</a></li>
+                    <li><a href="/index.html#contacto">Contacto</a></li>
+                    <li id="admin-menu-slot"></li>
+                    <li><a href="/account.html" id="auth-link">Ingresar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="section" id="main-content" tabindex="-1">
+        <div class="admin-wrapper">
+            <div class="section-head">
+                <h1 class="section-title">Panel de administración</h1>
+                <p class="section-description">Gestioná cursos, acciones sustentables, entregas de fotos y pagos.</p>
+            </div>
+
+            <!-- Pestañas internas del panel -->
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" data-target="view-courses">Cursos</button>
+                <button class="admin-tab-btn" data-target="view-actions">Acciones</button>
+                <button class="admin-tab-btn" data-target="view-deliveries">Entregas</button>
+                <button class="admin-tab-btn" data-target="view-payments">Pagos</button>
+                <button class="admin-tab-btn" data-target="view-faqs">Preguntas frecuentes</button>
+            </div>
+
+            <!-- VISTA 1: CURSOS -->
+            <section id="view-courses" class="admin-view-content active">
+                <div class="admin-header-flex">
+                    <div>
+                        <h2 class="admin-title">Cursos</h2>
+                        <p class="admin-desc">Creá, editá, archivá y eliminá cursos. También podés subir la imagen de cada curso.</p>
+                    </div>
+                    <button id="open-create-course-btn" class="admin-btn-create">+ Crear curso</button>
+                </div>
+
+                <div id="courses-feedback" aria-live="polite"></div>
+
+                <!-- Formulario exclusivo de Cursos -->
+                <div id="course-form-container" class="admin-section admin-form-box">
+                    <h2 class="admin-title" id="course-form-title">Nuevo curso</h2>
+                    <div id="course-feedback" aria-live="polite"></div>
+                    <form id="create-course-form">
+                        <input type="hidden" id="course-id">
+                        <div class="admin-form-grid">
+                            <div class="admin-form-group">
+                                <label for="title">Título del Curso</label>
+                                <input type="text" id="title" required placeholder="Ej: Jardinería Urbana">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="duration">Duración</label>
+                                <input type="text" id="duration" required placeholder="Ej: 4 semanas">
+                            </div>
+                        </div>
+                        <div class="admin-form-grid">
+                            <div class="admin-form-group">
+                                <label for="modulesCount">Cantidad de Módulos</label>
+                                <input type="number" id="modulesCount" required placeholder="5">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="pointsCost">Eco-Points requeridos</label>
+                                <input type="number" id="pointsCost" value="30" min="0" step="1" required>
+                            </div>
+                        </div>
+                        <div class="admin-form-grid">
+                            <div class="admin-form-group">
+                                <label for="price">Precio (Dinero)</label>
+                                <input type="number" id="price" value="0" min="0" step="0.01">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="currency">Moneda</label>
+                                <select id="currency">
+                                    <option value="UYU">UYU</option>
+                                    <option value="USD">USD</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="admin-form-grid">
+                            <div class="admin-form-group">
+                                <label for="level">Nivel</label>
+                                <select id="level">
+                                    <option value="todos">Apto para todos</option>
+                                    <option value="principiante">Principiante</option>
+                                    <option value="intermedio">Intermedio</option>
+                                    <option value="avanzado">Avanzado</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="paymentTypePreview">Modalidad de pago</label>
+                                <input type="text" id="paymentTypePreview" readonly>
+                            </div>
+                        </div>
+                        <p class="admin-hint">La modalidad de pago se calcula automáticamente según los Eco-Points y el precio.</p>
+                        <div class="admin-form-group">
+                            <label for="description">Descripción</label>
+                            <textarea id="description" rows="3" required placeholder="Descripción del curso"></textarea>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="contentDetails">Contenido Detallado</label>
+                            <textarea id="contentDetails" rows="3" required placeholder="Material exclusivo"></textarea>
+                        </div>
+                        <div class="admin-form-grid">
+                            <div class="admin-form-group">
+                                <label for="videoUrl">URL del video</label>
+                                <input type="url" id="videoUrl" placeholder="https://...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="pdfUrl">URL del PDF</label>
+                                <input type="url" id="pdfUrl" placeholder="https://...">
+                            </div>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="image">Imagen del curso (obligatoria al crear)</label>
+                            <input type="file" id="image" accept="image/jpeg,image/png,image/webp" required>
+                        </div>
+                        <div class="admin-form-actions">
+                            <button type="submit" class="admin-btn-create" id="course-submit-btn">Guardar curso</button>
+                            <button type="button" id="cancel-course-btn" class="admin-btn-cancel">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="admin-section">
+                    <h2 class="admin-subtitle">Cursos cargados</h2>
+                    <div id="courses-admin-container" class="admin-items-list">
+                        <p>Cargando cursos...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA 2: ACCIONES -->
+            <section id="view-actions" class="admin-view-content">
+                <div class="admin-header-flex">
+                    <div>
+                        <h2 class="admin-title">Acciones sustentables</h2>
+                        <p class="admin-desc">Creá, editá, archivá y eliminá las acciones que los usuarios pueden validar.</p>
+                    </div>
+                    <button id="open-create-action-btn" class="admin-btn-create">+ Crear acción</button>
+                </div>
+
+                <div id="actions-feedback" aria-live="polite"></div>
+
+                <div id="action-form-container" class="admin-section admin-form-box">
+                    <h2 class="admin-title" id="action-form-title">Nueva acción</h2>
+                    <p id="action-key-note" class="admin-hint"></p>
+                    <div id="action-form-feedback" aria-live="polite"></div>
+                    <form id="create-action-form">
+                        <input type="hidden" id="action-id">
+                        <div class="admin-form-grid">
+                            <div class="admin-form-group">
+                                <label for="action-title">Título de la acción</label>
+                                <input type="text" id="action-title" required placeholder="Ej: Limpiar parques">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="action-points">Eco-Points por unidad</label>
+                                <input type="number" id="action-points" min="0" step="1" value="10" required>
+                            </div>
+                        </div>
+                        <div class="admin-form-grid">
+                            <div class="admin-form-group">
+                                <label for="action-impact">Impacto y unidad</label>
+                                <select id="action-impact" required>
+                                    <option value="residuos">Residuos (kg)</option>
+                                    <option value="arboles">Árboles plantados (árboles)</option>
+                                    <option value="horas">Horas de voluntariado (horas)</option>
+                                    <option value="energia">Energía ahorrada (kWh)</option>
+                                    <option value="electronicos">Electrónicos reutilizados (unidades)</option>
+                                    <option value="acciones">Acciones generales (acciones)</option>
+                                </select>
+                                <span id="action-impact-hint" class="admin-hint">Unidad: kg</span>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="action-order">Orden</label>
+                                <input type="number" id="action-order" min="0" step="1" value="0" required>
+                            </div>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="action-image-alt">Texto alternativo de la imagen</label>
+                            <input type="text" id="action-image-alt" maxlength="200" placeholder="Descripción de la imagen">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="action-description">Descripción</label>
+                            <textarea id="action-description" rows="3" required placeholder="Descripción de la acción"></textarea>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="action-image">Imagen de la acción (obligatoria al crear)</label>
+                            <input type="file" id="action-image" accept="image/jpeg,image/png,image/webp" required>
+                        </div>
+                        <div class="admin-form-actions">
+                            <button type="submit" class="admin-btn-create" id="action-submit-btn">Guardar acción</button>
+                            <button type="button" id="cancel-action-btn" class="admin-btn-cancel">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="admin-section">
+                    <h2 class="admin-subtitle">Acciones cargadas</h2>
+                    <div id="actions-admin-container" class="admin-items-list">
+                        <p>Cargando acciones...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA 3: ENTREGAS -->
+            <section id="view-deliveries" class="admin-view-content">
+                <h2 class="admin-title">Validar Evidencias de Usuarios</h2>
+                <div id="action-feedback" aria-live="polite"></div>
+                <div id="pending-actions-container" class="admin-section">
+                    <p>Cargando evidencias pendientes...</p>
+                </div>
+            </section>
+
+            <!-- VISTA 4: PAGOS -->
+            <section id="view-payments" class="admin-view-content">
+                <h2 class="admin-title">Reporte de Pagos y Compras</h2>
+                <div id="purchases-feedback" aria-live="polite"></div>
+                <div id="purchases-container" class="admin-section admin-table-wrapper">
+                    <p>Cargando reporte de compras...</p>
+                </div>
+            </section>
+
+            <!-- VISTA 5: PREGUNTAS FRECUENTES (FAQ) -->
+            <section id="view-faqs" class="admin-view-content">
+                <div class="admin-header-flex">
+                    <div>
+                        <h2 class="admin-title">Preguntas frecuentes</h2>
+                        <p class="admin-desc">Agregá, editá o eliminá las preguntas y respuestas.</p>
+                    </div>
+                    <button id="open-create-faq-btn" class="admin-btn-create">+ Crear pregunta</button>
+                </div>
+
+                <div id="faqs-feedback" aria-live="polite"></div>
+
+                <!-- Formulario exclusivo de FAQs -->
+                <div id="faq-form-container" class="admin-section admin-form-box">
+                    <h2 class="admin-title" id="faq-form-title">Nueva pregunta frecuente</h2>
+                    <div id="faq-feedback" aria-live="polite"></div>
+                    <form id="create-faq-form">
+                        <input type="hidden" id="faq-id">
+                        <div class="admin-form-group">
+                            <label for="faq-question">Pregunta</label>
+                            <input type="text" id="faq-question" required placeholder="Ej: ¿Cómo gano Eco-Points?">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="faq-answer">Respuesta</label>
+                            <textarea id="faq-answer" rows="3" required placeholder="Explicación detallada..."></textarea>
+                        </div>
+                        <div class="admin-form-actions">
+                            <button type="submit" class="admin-btn-create" id="faq-submit-btn">Guardar pregunta</button>
+                            <button type="button" id="cancel-faq-btn" class="admin-btn-cancel">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="admin-section">
+                    <h2 class="admin-subtitle">Preguntas cargadas</h2>
+                    <div id="faqs-admin-container" class="admin-items-list">
+                        <p>Cargando preguntas frecuentes...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="/js/config.js"></script>
+    <script type="module" src="/js/core/index.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/admin.js"></script>
+
+</body>
+
+</html>
