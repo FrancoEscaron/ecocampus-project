@@ -96,6 +96,7 @@ const faqRoutes = require("./routes/faqRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const impactRoutes = require("./routes/impactRoutes");
+const certificateRoutes = require("./routes/certificateRoutes");
 
 app.use("/api", formRoutes);
 app.use("/api/auth", authRoutes);
@@ -105,6 +106,7 @@ app.use("/api/faqs", faqRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/impact", impactRoutes);
+app.use("/api/certificates", certificateRoutes);
 
 app.use((req, res) => {
     res.status(404).json({ success: false, message: "Recurso no encontrado." });

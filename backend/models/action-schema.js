@@ -7,6 +7,7 @@ const actionSchema = new mongoose.Schema({
     description: { type: String, required: true, trim: true },
     pointsPerUnit: { type: Number, required: true, min: 0 },
     impactMetric: { type: String, enum: IMPACT_METRIC_KEYS, required: true },
+    cooldownDays: { type: Number, default: 30, min: 0, max: 365 },
     image: { type: String, required: true, trim: true },
     imageAlt: { type: String, default: "", trim: true },
     order: { type: Number, default: 0, min: 0 },

@@ -8,7 +8,8 @@ const userSchema = mongoose.Schema({
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     coursesOwned: [{ type: mongoose.Schema.Types.ObjectId, ref: 'course' }],
     pointsPurchases: [{
-        course: { type: mongoose.Schema.Types.ObjectId, ref: 'course', required: true },
+        course: { type: mongoose.Schema.Types.ObjectId, ref: 'course' },
+        courseTitle: { type: String, default: "", trim: true },
         pointsSpent: { type: Number, required: true, min: 0 },
         moneySpent: { type: Number, default: 0, min: 0 },
         currency: { type: String, enum: ["UYU", "USD"], default: "UYU" },

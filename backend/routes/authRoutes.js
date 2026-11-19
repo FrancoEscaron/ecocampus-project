@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const rateLimit = require("express-rate-limit");
 const User = require("../models/user-schema");
 const { cleanString, isEmail, isPasswordValid } = require("../utils/validation");
+const { notify } = require("../utils/mailer");
+const { buildWelcomeEmail } = require("../utils/emailTemplates");
 
 const router = express.Router();
 
@@ -57,6 +59,8 @@ router.post("/register", registerLimiter, async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const nuevoUsuario = new User({ name, lastName, email, password: hashedPassword });
         await nuevoUsuario.save();
+
+        notify(() => buildWelcomeEmail({ to: nuevoUsuario.email, nombre: nuevoUsuario.name }));
 
         res.status(201).json({ success: true, message: "¡Usuario registrado con éxito!" });
     } catch (error) {

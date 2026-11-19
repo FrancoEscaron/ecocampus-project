@@ -1,12 +1,34 @@
 const express = require("express");
 const Course = require("../models/course-schema");
+const CourseProgress = require("../models/courseProgress-schema");
 const User = require("../models/user-schema");
 const { requireAuth } = require("../middleware/adminAuth");
 const { isValidId, toNumber } = require("../utils/validation");
+const { notify } = require("../utils/mailer");
+const { buildPurchaseEmail } = require("../utils/emailTemplates");
+const { issueCertificate } = require("../utils/certificates");
+const { getCompletedModules, isCourseComplete } = require("../utils/courseProgress");
 
 const router = express.Router();
 
 const roundMoney = (value) => Math.round(value * 100) / 100;
+
+const ownsCourse = (user, course) =>
+    user.role === "admin" || (user.coursesOwned || []).some((ownedId) => String(ownedId) === String(course._id));
+
+const toPublicCourse = (course) => {
+    const data = typeof course.toObject === "function" ? course.toObject() : { ...course };
+
+    delete data.contentDetails;
+    delete data.videoUrl;
+    delete data.pdfUrl;
+    data.modules = (data.modules || []).map((module) => ({
+        _id: String(module._id),
+        title: module.title
+    }));
+
+    return data;
+};
 
 const getPaymentMethod = (pointsUsed, moneySpent) => {
     if (pointsUsed > 0 && moneySpent > 0) return "mixed";
@@ -18,7 +40,131 @@ const getPaymentMethod = (pointsUsed, moneySpent) => {
 router.get("/", async (req, res, next) => {
     try {
         const courses = await Course.find({ archived: null });
-        res.json({ success: true, data: courses });
+        res.json({ success: true, data: courses.map(toPublicCourse) });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/:id", async (req, res, next) => {
+    try {
+        if (!isValidId(req.params.id)) {
+            return res.status(400).json({ success: false, message: "Identificador de curso inválido." });
+        }
+
+        const course = await Course.findOne({ _id: req.params.id, archived: null });
+        if (!course) {
+            return res.status(404).json({ success: false, message: "Curso no encontrado o no disponible." });
+        }
+
+        res.json({ success: true, data: toPublicCourse(course) });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/:id/content", requireAuth, async (req, res, next) => {
+    try {
+        if (!isValidId(req.params.id)) {
+            return res.status(400).json({ success: false, message: "Identificador de curso inválido." });
+        }
+
+        const course = await Course.findOne({ _id: req.params.id, archived: null });
+        if (!course) {
+            return res.status(404).json({ success: false, message: "Curso no encontrado o no disponible." });
+        }
+
+        if (!ownsCourse(req.authUser, course)) {
+            return res.status(403).json({ success: false, message: "Necesitás desbloquear este curso para ver su contenido." });
+        }
+
+        const progress = await CourseProgress.findOne({
+            user: req.authUser._id,
+            course: course._id
+        }).lean();
+
+        res.json({
+            success: true,
+            data: {
+                course: { _id: String(course._id), title: course.title },
+                modules: (course.modules || []).map((module) => ({
+                    _id: String(module._id),
+                    title: module.title,
+                    description: module.description || "",
+                    videoUrl: module.videoUrl || "",
+                    pdfUrl: module.pdfUrl || ""
+                })),
+                videoUrl: course.videoUrl || "",
+                pdfUrl: course.pdfUrl || "",
+                contentDetails: course.contentDetails || "",
+                completedModules: getCompletedModules(progress, course)
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put("/:id/modules/:moduleId", requireAuth, async (req, res, next) => {
+    try {
+        if (!isValidId(req.params.id) || !isValidId(req.params.moduleId)) {
+            return res.status(400).json({ success: false, message: "Identificador de curso o módulo inválido." });
+        }
+
+        const { completed } = req.body || {};
+        if (typeof completed !== "boolean") {
+            return res.status(400).json({ success: false, message: "El estado del módulo debe ser verdadero o falso." });
+        }
+
+        const course = await Course.findOne({ _id: req.params.id, archived: null });
+        if (!course) {
+            return res.status(404).json({ success: false, message: "Curso no encontrado o no disponible." });
+        }
+
+        if (!ownsCourse(req.authUser, course)) {
+            return res.status(403).json({ success: false, message: "Necesitás desbloquear este curso para registrar tu progreso." });
+        }
+
+        const module = course.modules.id(req.params.moduleId);
+        if (!module) {
+            return res.status(404).json({ success: false, message: "Módulo no encontrado." });
+        }
+
+        const update = completed
+            ? { $addToSet: { completedModules: module._id } }
+            : { $pull: { completedModules: module._id } };
+
+        const progress = await CourseProgress.findOneAndUpdate(
+            { user: req.authUser._id, course: course._id },
+            update,
+            { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+        );
+
+        const completo = isCourseComplete(progress, course);
+
+        if (completo && !progress.completedAt) {
+            progress.completedAt = new Date();
+            await progress.save();
+        } else if (!completo && progress.completedAt) {
+            progress.completedAt = null;
+            await progress.save();
+        }
+
+        if (completo) {
+            try {
+                await issueCertificate(req.authUser, course, progress);
+            } catch (error) {
+                console.error("No se pudo emitir el certificado:", error.message);
+            }
+        }
+
+        res.json({
+            success: true,
+            message: completed ? "Módulo marcado como completado." : "Módulo desmarcado.",
+            data: {
+                completedModules: getCompletedModules(progress, course)
+            }
+        });
     } catch (error) {
         next(error);
     }
@@ -105,6 +251,7 @@ router.post("/buy", requireAuth, async (req, res, next) => {
                 $push: {
                     pointsPurchases: {
                         course: course._id,
+                        courseTitle: course.title,
                         pointsSpent: pointsUsed,
                         moneySpent,
                         currency,
@@ -121,6 +268,19 @@ router.post("/buy", requireAuth, async (req, res, next) => {
         }
 
         const purchase = updated.pointsPurchases[updated.pointsPurchases.length - 1];
+
+        if (updated.email) {
+            notify(() => buildPurchaseEmail({
+                to: updated.email,
+                nombre: updated.name,
+                curso: course.title,
+                puntosUsados: purchase.pointsSpent,
+                dinero: purchase.moneySpent,
+                moneda: purchase.currency,
+                metodo: purchase.paymentMethod,
+                totalPuntos: updated.ecoPoints
+            }));
+        }
 
         res.json({
             success: true,

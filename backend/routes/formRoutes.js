@@ -1,7 +1,10 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const Form = require("../models/form-schema");
+const User = require("../models/user-schema");
 const { cleanString, isEmail } = require("../utils/validation");
+const { notify } = require("../utils/mailer");
+const { buildContactNotificationEmail } = require("../utils/emailTemplates");
 
 const router = express.Router();
 
@@ -34,11 +37,23 @@ router.post("/contacto", contactLimiter, async (req, res, next) => {
         const nuevoFormulario = new Form({ nombre, apellido, correo, mensaje });
         await nuevoFormulario.save();
 
+        const adminEmail = cleanString(process.env.ADMIN_EMAIL).toLowerCase()
+            || (await User.findOne({ role: "admin" }).sort({ createdAt: 1 }).select("email"))?.email
+            || "";
+
+        if (adminEmail) {
+            notify(() => buildContactNotificationEmail({
+                to: adminEmail,
+                nombre,
+                apellido,
+                correo,
+                mensaje,
+                fecha: nuevoFormulario.createdAt || new Date()
+            }));
+        }
+
         res.status(201).json({ success: true, message: "¡Mensaje enviado con éxito!" });
     } catch (error) {
-        if (error.code === 11000) {
-            return res.status(409).json({ success: false, message: "Este correo ya ha enviado un formulario anteriormente." });
-        }
         next(error);
     }
 });

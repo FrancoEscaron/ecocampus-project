@@ -2,12 +2,16 @@ const express = require("express");
 const Course = require("../models/course-schema");
 const Action = require("../models/action-schema");
 const ActionSubmission = require("../models/actionSubmission-schema");
+const CourseProgress = require("../models/courseProgress-schema");
 const User = require("../models/user-schema");
 const FAQ = require("../models/faq-schema");
+const Form = require("../models/form-schema");
 const { requireAuth, requireAdmin } = require("../middleware/adminAuth");
 const { uploadCourseImage, uploadActionImage, removeUploadedFile, removeStoredFile } = require("../middleware/imageUpload");
 const { cleanString, toNumber, isValidId, isOneOf, slugify } = require("../utils/validation");
 const { IMPACT_METRICS, IMPACT_METRIC_KEYS } = require("../utils/actionTaxonomy");
+const { notify } = require("../utils/mailer");
+const { buildSubmissionReviewedEmail } = require("../utils/emailTemplates");
 
 const router = express.Router();
 
@@ -28,9 +32,94 @@ const buildCourseData = (body, partial) => {
     readText("title", "El título", 3, 120);
     readText("description", "La descripción", 10, 2000);
     readText("duration", "La duración", 2, 80);
-    readText("contentDetails", "El contenido detallado", 5, 5000);
     readText("videoUrl", "La URL del video", 0, 500);
     readText("pdfUrl", "La URL del PDF", 0, 500);
+
+    const modulesProvided = body.modules !== undefined;
+    readText("contentDetails", "El contenido detallado", modulesProvided ? 0 : 5, 5000);
+
+    const readModules = () => {
+        if (!modulesProvided) return;
+
+        let list = body.modules;
+
+        if (typeof list === "string") {
+            try {
+                list = JSON.parse(list);
+            } catch {
+                errors.push("Los módulos deben enviarse como una lista válida.");
+                return;
+            }
+        }
+
+        if (!Array.isArray(list)) {
+            errors.push("Los módulos deben enviarse como una lista.");
+            return;
+        }
+
+        if (list.length === 0) {
+            errors.push("El curso debe tener al menos un módulo.");
+            return;
+        }
+
+        if (list.length > 50) {
+            errors.push("El curso no puede tener más de 50 módulos.");
+            return;
+        }
+
+        const modules = [];
+        let valid = true;
+
+        list.forEach((item, index) => {
+            const title = cleanString(item?.title);
+            const description = cleanString(item?.description);
+            const videoUrl = cleanString(item?.videoUrl);
+            const pdfUrl = cleanString(item?.pdfUrl);
+
+            if (title.length < 3 || title.length > 120) {
+                errors.push(`El título del módulo ${index + 1} debe tener entre 3 y 120 caracteres.`);
+                valid = false;
+            }
+
+            if (description.length > 5000) {
+                errors.push(`La descripción del módulo ${index + 1} no puede superar los 5000 caracteres.`);
+                valid = false;
+            }
+
+            if (videoUrl.length > 500) {
+                errors.push(`La URL del video del módulo ${index + 1} no puede superar los 500 caracteres.`);
+                valid = false;
+            }
+
+            if (pdfUrl.length > 500) {
+                errors.push(`La URL del PDF del módulo ${index + 1} no puede superar los 500 caracteres.`);
+                valid = false;
+            }
+
+            const module = { title, description, videoUrl, pdfUrl };
+
+            if (item && isValidId(item._id)) {
+                module._id = item._id;
+            }
+
+            modules.push(module);
+        });
+
+        if (valid) data.modules = modules;
+    };
+
+    readModules();
+
+    if (data.modules) {
+        const derivedContent = data.modules
+            .map((module) => (module.description ? `${module.title}: ${module.description}` : module.title))
+            .join("\n\n")
+            .trim();
+
+        if (!data.contentDetails || data.contentDetails.length < 5) {
+            data.contentDetails = derivedContent.length >= 5 ? derivedContent : "Contenido del curso.";
+        }
+    }
 
     if (!partial || body.level !== undefined) {
         const level = cleanString(body.level) || "todos";
@@ -60,8 +149,11 @@ const buildCourseData = (body, partial) => {
         else data.currency = currency;
     }
 
-    if (!partial || body.modulesCount !== undefined) {
-        const modulesCount = toNumber(body.modulesCount, { min: 0, max: 1000, integer: true });
+    if (!modulesProvided || data.modules) {
+        const modulesCount = data.modules
+            ? data.modules.length
+            : toNumber(body.modulesCount, { min: 0, max: 1000, integer: true });
+
         if (modulesCount === null) errors.push("La cantidad de módulos debe ser un entero entre 0 y 1000.");
         else data.modulesCount = modulesCount;
     }
@@ -117,6 +209,12 @@ const buildActionData = (body, partial) => {
         const order = toNumber(body.order ?? 0, { min: 0, max: 1000, integer: true });
         if (order === null) errors.push("El orden debe ser un entero entre 0 y 1000.");
         else data.order = order;
+    }
+
+    if (!partial || body.cooldownDays !== undefined) {
+        const cooldownDays = toNumber(body.cooldownDays ?? 30, { min: 0, max: 365, integer: true });
+        if (cooldownDays === null) errors.push("La espera para repetir debe ser un entero entre 0 y 365 días.");
+        else data.cooldownDays = cooldownDays;
     }
 
     return { data, errors };
@@ -247,6 +345,15 @@ router.delete("/courses/:id", async (req, res, next) => {
 
         removeStoredFile(cursoEliminado.image);
         await User.updateMany({ coursesOwned: cursoEliminado._id }, { $pull: { coursesOwned: cursoEliminado._id } });
+        await User.updateMany(
+            { "pointsPurchases.course": cursoEliminado._id },
+            {
+                $set: { "pointsPurchases.$[compra].courseTitle": cursoEliminado.title },
+                $unset: { "pointsPurchases.$[compra].course": "" }
+            },
+            { arrayFilters: [{ "compra.course": cursoEliminado._id }] }
+        );
+        await CourseProgress.deleteMany({ course: cursoEliminado._id });
 
         res.json({ success: true, message: "Curso eliminado con éxito" });
     } catch (error) {
@@ -416,9 +523,19 @@ router.put("/actions/:id", async (req, res, next) => {
             return res.status(400).json({ success: false, message: "Estado inválido. Usá approved o rejected." });
         }
 
+        const note = cleanString((req.body || {}).note);
+        if (status === "rejected" && (note.length < 10 || note.length > 500)) {
+            return res.status(400).json({
+                success: false,
+                message: "El motivo del rechazo debe tener entre 10 y 500 caracteres."
+            });
+        }
+
+        const reviewNote = status === "rejected" ? note : "";
+
         const submission = await ActionSubmission.findOneAndUpdate(
             { _id: req.params.id, status: "pending" },
-            { $set: { status, reviewedAt: new Date(), reviewedBy: req.authUser._id } },
+            { $set: { status, reviewNote, reviewedAt: new Date(), reviewedBy: req.authUser._id } },
             { returnDocument: "after" }
         );
 
@@ -430,21 +547,54 @@ router.put("/actions/:id", async (req, res, next) => {
             return res.status(409).json({ success: false, message: "Esta evidencia ya fue revisada." });
         }
 
+        let updatedUserEmail = null;
+
         if (status === "approved") {
             try {
                 const updatedUser = await User.findByIdAndUpdate(submission.user, {
                     $inc: { ecoPoints: submission.pointsValue || 0 },
                     $addToSet: { completedActions: submission._id }
-                });
+                }, { returnDocument: "after" });
 
                 if (!updatedUser) {
                     await ActionSubmission.findByIdAndUpdate(submission._id, { status: "pending", reviewedAt: null, reviewedBy: null });
                     return res.status(404).json({ success: false, message: "Usuario no encontrado. No se pudieron acreditar los puntos." });
                 }
+
+                updatedUserEmail = updatedUser;
             } catch (pointsError) {
                 await ActionSubmission.findByIdAndUpdate(submission._id, { status: "pending", reviewedAt: null, reviewedBy: null });
                 throw pointsError;
             }
+        }
+
+        const recipient = status === "approved"
+            ? updatedUserEmail
+            : await User.findById(submission.user).select("name email ecoPoints");
+
+        if (recipient?.email) {
+            let disponibleDesde = null;
+
+            if (status === "approved" && submission.actionKey) {
+                const reviewedAction = await Action.findOne({ key: submission.actionKey }).select("cooldownDays");
+                const cooldownDays = Math.max(0, Math.floor(Number(reviewedAction?.cooldownDays) || 0));
+
+                if (cooldownDays > 0) {
+                    const base = new Date(submission.reviewedAt || Date.now());
+                    disponibleDesde = new Date(base.getTime() + cooldownDays * 24 * 60 * 60 * 1000);
+                }
+            }
+
+            notify(() => buildSubmissionReviewedEmail({
+                to: recipient.email,
+                nombre: recipient.name,
+                accion: submission.actionType || "la acción",
+                aprobada: status === "approved",
+                puntos: submission.pointsValue || 0,
+                totalPuntos: recipient.ecoPoints || 0,
+                motivo: reviewNote,
+                disponibleDesde
+            }));
         }
 
         const statusLabel = status === "approved" ? "aprobada" : "rechazada";
@@ -476,7 +626,7 @@ router.delete("/actions/:id", async (req, res, next) => {
 
         await ActionSubmission.findByIdAndDelete(submission._id);
         removeStoredFile(submission.evidenceUrl);
-        res.json({ success: true, message: "Acción eliminada con éxito" });
+        res.json({ success: true, message: "Evidencia eliminada con éxito" });
     } catch (error) {
         next(error);
     }
@@ -562,6 +712,73 @@ router.delete("/faqs/:id", async (req, res, next) => {
         }
 
         res.json({ success: true, message: "Pregunta eliminada" });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/contact", async (req, res, next) => {
+    try {
+        const mensajes = await Form.find().sort({ _id: -1 }).limit(200).lean();
+
+        const data = mensajes.map((mensaje) => ({
+            _id: mensaje._id,
+            nombre: mensaje.nombre,
+            apellido: mensaje.apellido,
+            correo: mensaje.correo,
+            mensaje: mensaje.mensaje,
+            read: Boolean(mensaje.read),
+            createdAt: mensaje.createdAt || mensaje._id.getTimestamp()
+        }));
+
+        res.json({ success: true, data });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put("/contact/:id", async (req, res, next) => {
+    try {
+        if (!isValidId(req.params.id)) {
+            return res.status(400).json({ success: false, message: "Identificador de mensaje inválido." });
+        }
+
+        if (typeof (req.body || {}).read !== "boolean") {
+            return res.status(400).json({ success: false, message: "Indicá si el mensaje está leído." });
+        }
+
+        const actualizado = await Form.findByIdAndUpdate(
+            req.params.id,
+            { $set: { read: req.body.read } },
+            { returnDocument: "after" }
+        );
+
+        if (!actualizado) {
+            return res.status(404).json({ success: false, message: "Mensaje no encontrado." });
+        }
+
+        res.json({
+            success: true,
+            message: actualizado.read ? "Mensaje marcado como leído." : "Mensaje marcado como no leído.",
+            data: { read: actualizado.read }
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.delete("/contact/:id", async (req, res, next) => {
+    try {
+        if (!isValidId(req.params.id)) {
+            return res.status(400).json({ success: false, message: "Identificador de mensaje inválido." });
+        }
+
+        const eliminado = await Form.findByIdAndDelete(req.params.id);
+        if (!eliminado) {
+            return res.status(404).json({ success: false, message: "Mensaje no encontrado." });
+        }
+
+        res.json({ success: true, message: "Mensaje eliminado" });
     } catch (error) {
         next(error);
     }

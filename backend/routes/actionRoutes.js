@@ -19,8 +19,14 @@ const submissionLimiter = rateLimit({
 
 const withUnit = (action) => ({
     ...action,
+    cooldownDays: Number.isFinite(Number(action.cooldownDays)) ? Number(action.cooldownDays) : 30,
     unit: IMPACT_METRICS[action.impactMetric]?.unit || "acciones"
 });
+
+const addDays = (date, days) => new Date(date.getTime() + days * 24 * 60 * 60 * 1000);
+
+const formatAvailableDate = (date) =>
+    date.toLocaleDateString("es-UY", { day: "2-digit", month: "2-digit", year: "numeric" });
 
 router.get("/catalog", async (req, res, next) => {
     try {
@@ -82,18 +88,43 @@ router.post("/", requireAuth, submissionLimiter, uploadEvidence, async (req, res
             return res.status(400).json({ success: false, message: "La cantidad declarada supera el máximo permitido para esta acción." });
         }
 
-        const existing = await ActionSubmission.findOne({
+        const pending = await ActionSubmission.findOne({
             user: req.authUser._id,
             actionKey,
-            status: { $in: ["pending", "approved"] }
+            status: "pending"
         });
 
-        if (existing) {
+        if (pending) {
             removeUploadedFile(req.file);
-            const message = existing.status === "approved"
-                ? "Ya validaste esta acción."
-                : "Ya tenés una evidencia pendiente para esta acción.";
-            return res.status(409).json({ success: false, message, data: { submission: existing } });
+            return res.status(409).json({
+                success: false,
+                message: "Ya tenés una evidencia pendiente para esta acción.",
+                data: { submission: pending }
+            });
+        }
+
+        const cooldownDays = Math.max(0, Math.floor(Number(action.cooldownDays) || 0));
+
+        if (cooldownDays > 0) {
+            const lastApproved = await ActionSubmission.findOne({
+                user: req.authUser._id,
+                actionKey,
+                status: "approved"
+            }).sort({ reviewedAt: -1, submittedAt: -1 });
+
+            if (lastApproved) {
+                const reviewedAt = lastApproved.reviewedAt || lastApproved.submittedAt || lastApproved.createdAt;
+                const availableAt = addDays(new Date(reviewedAt), cooldownDays);
+
+                if (Date.now() < availableAt.getTime()) {
+                    removeUploadedFile(req.file);
+                    return res.status(409).json({
+                        success: false,
+                        message: `Esta acción ya fue validada. Podés repetirla a partir del ${formatAvailableDate(availableAt)}.`,
+                        data: { availableAt: availableAt.toISOString() }
+                    });
+                }
+            }
         }
 
         const submission = await ActionSubmission.create({
@@ -117,7 +148,7 @@ router.post("/", requireAuth, submissionLimiter, uploadEvidence, async (req, res
     } catch (error) {
         removeUploadedFile(req.file);
         if (error.code === 11000) {
-            return res.status(409).json({ success: false, message: "Ya tenés una evidencia pendiente o aprobada para esta acción." });
+            return res.status(409).json({ success: false, message: "Ya tenés una evidencia pendiente para esta acción." });
         }
         next(error);
     }

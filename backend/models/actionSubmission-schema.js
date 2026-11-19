@@ -12,6 +12,7 @@ const actionSubmissionSchema = new mongoose.Schema({
     pointsValue: { type: Number, required: true, min: 0 },
     evidenceUrl: { type: String, required: true, trim: true },
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+    reviewNote: { type: String, trim: true, default: "" },
     submittedAt: { type: Date, default: Date.now },
     reviewedAt: { type: Date, default: null },
     reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'user', default: null }
@@ -25,7 +26,7 @@ actionSubmissionSchema.index(
         unique: true,
         partialFilterExpression: {
             actionKey: { $gt: "" },
-            status: { $in: ["pending", "approved"] }
+            status: "pending"
         }
     }
 );
