@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { obtenerCertificado } from "../api";
+import { getApiErrorMessage } from "../utils/apiError";
 import { formatDate } from "../utils/format";
 
 export default function Certificado() {
@@ -19,7 +20,7 @@ export default function Certificado() {
         if (respuesta.ok && datos?.success) {
           setCertificado(datos.data);
         } else {
-          setError(datos?.message || "No se pudo cargar el certificado.");
+          setError(getApiErrorMessage(datos, "No se pudo cargar el certificado."));
         }
       })
       .catch(() => {

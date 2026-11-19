@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registrarUsuario } from "../api";
 import useForm from "../hooks/useForm";
+import { getApiErrorMessage } from "../utils/apiError";
 
 export default function Registro() {
   const { valores, cambiar } = useForm({
@@ -35,7 +36,7 @@ export default function Registro() {
       } else {
         setAviso({
           tipo: "error",
-          texto: datos?.message || "No se pudo completar el registro.",
+          texto: getApiErrorMessage(datos, "No se pudo completar el registro."),
         });
       }
     } catch {
@@ -67,6 +68,8 @@ export default function Registro() {
                 required
                 autoComplete="given-name"
                 placeholder="Tu nombre"
+                minLength="2"
+                maxLength="80"
                 value={valores.name}
                 onChange={cambiar}
               />
@@ -80,6 +83,8 @@ export default function Registro() {
                 required
                 autoComplete="family-name"
                 placeholder="Tu apellido"
+                minLength="2"
+                maxLength="80"
                 value={valores.lastName}
                 onChange={cambiar}
               />

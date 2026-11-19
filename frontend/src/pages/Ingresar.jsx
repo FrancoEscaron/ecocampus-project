@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { iniciarSesion } from "../api";
 import useForm from "../hooks/useForm";
+import { getApiErrorMessage } from "../utils/apiError";
 import { setSession } from "../utils/session";
 
 export default function Ingresar() {
@@ -40,7 +41,7 @@ export default function Ingresar() {
       } else {
         setAviso({
           tipo: "error",
-          texto: datos?.message || "No se pudo iniciar sesión.",
+          texto: getApiErrorMessage(datos, "No se pudo iniciar sesión."),
         });
       }
     } catch {

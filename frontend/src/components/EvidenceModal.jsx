@@ -9,6 +9,7 @@ import {
   getQuantityStep,
   isWholeUnit,
 } from "../utils/actions";
+import { getApiErrorMessage } from "../utils/apiError";
 
 export default function EvidenceModal({ accion, onCerrar, onEnviado }) {
   const { valores, cambiar } = useForm({ description: "", quantity: "1" });
@@ -104,7 +105,7 @@ export default function EvidenceModal({ accion, onCerrar, onEnviado }) {
         window.setTimeout(onCerrar, 1500);
       } else {
         setAviso({
-          texto: datos?.message || "No se pudo enviar la evidencia.",
+          texto: getApiErrorMessage(datos, "No se pudo enviar la evidencia."),
           tipo: "error",
         });
         if (respuesta.status === 409 && onEnviado) await onEnviado();

@@ -14,6 +14,7 @@ import {
   getModulesLabel,
   getOwnedCourseIds,
 } from "../utils/courses";
+import { getApiErrorMessage } from "../utils/apiError";
 import { formatMoney, roundMoney, safeExternalUrl } from "../utils/format";
 import { updateUser } from "../utils/session";
 
@@ -53,7 +54,7 @@ export default function CourseModal({ curso, usuario, onCerrar, onActualizar }) 
           setContenido(datos.data);
         } else {
           setErrorContenido(
-            datos?.message || "No se pudo cargar el contenido del curso.",
+            getApiErrorMessage(datos, "No se pudo cargar el contenido del curso."),
           );
         }
       })
@@ -144,7 +145,7 @@ export default function CourseModal({ curso, usuario, onCerrar, onActualizar }) 
         });
       } else {
         setAviso({
-          texto: datos?.message || "No se pudo completar el pago.",
+          texto: getApiErrorMessage(datos, "No se pudo completar el pago."),
           tipo: "error",
         });
       }
@@ -186,7 +187,7 @@ export default function CourseModal({ curso, usuario, onCerrar, onActualizar }) 
         if (onActualizar && siguienteCompleto !== completo) onActualizar();
       } else {
         setAvisoModulo({
-          texto: datos?.message || "No se pudo guardar tu progreso.",
+          texto: getApiErrorMessage(datos, "No se pudo guardar tu progreso."),
           tipo: "error",
         });
       }

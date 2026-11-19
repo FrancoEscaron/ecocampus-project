@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { enviarContacto } from "../api";
 import useForm from "../hooks/useForm";
+import { getApiErrorMessage } from "../utils/apiError";
 
 export default function ContactSection() {
   const { valores, cambiar, reiniciar } = useForm({
@@ -33,7 +34,7 @@ export default function ContactSection() {
       } else {
         setAviso({
           tipo: "error",
-          texto: datos?.message || "No se pudo enviar el mensaje.",
+          texto: getApiErrorMessage(datos, "No se pudo enviar el mensaje."),
         });
       }
     } catch {
@@ -62,6 +63,8 @@ export default function ContactSection() {
                 id="nombre"
                 placeholder="Tu nombre"
                 autoComplete="given-name"
+                minLength="2"
+                maxLength="80"
                 value={valores.nombre}
                 onChange={cambiar}
                 required
@@ -75,6 +78,8 @@ export default function ContactSection() {
                 id="apellido"
                 placeholder="Tu apellido"
                 autoComplete="family-name"
+                minLength="2"
+                maxLength="80"
                 value={valores.apellido}
                 onChange={cambiar}
                 required
@@ -89,6 +94,7 @@ export default function ContactSection() {
               id="correo"
               placeholder="ejemplo@correo.com"
               autoComplete="email"
+              maxLength="120"
               value={valores.correo}
               onChange={cambiar}
               required
@@ -101,6 +107,8 @@ export default function ContactSection() {
               id="mensaje"
               rows="4"
               placeholder="Escribe tu mensaje"
+              minLength="10"
+              maxLength="2000"
               value={valores.mensaje}
               onChange={cambiar}
               required
