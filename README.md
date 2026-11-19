@@ -154,6 +154,8 @@ El registro público siempre crea usuarios con rol `user`. Para tener un adminis
 | `MAIL_FROM` | Remitente de los correos | `EcoCampus <no-responder@ecocampus.local>` |
 | `ADMIN_EMAIL` | Recibe el aviso del formulario de contacto | Un correo real |
 | `MAIL_MIN_GAP_MS` | Espera entre envíos, en milisegundos | `10500` con Mailtrap, vacío en otros |
+| `MAILTRAP_API_TOKEN` | Token de la API de Mailtrap. Si existe, se envía por HTTPS en lugar de SMTP | El de Mailtrap |
+| `MAILTRAP_INBOX_ID` | Bandeja de Mailtrap que recibe los correos | El número de la bandeja |
 
 ### Frontend (`frontend/.env`)
 
@@ -222,10 +224,13 @@ Si preferís crearlo a mano, usá estos valores:
 | `NODE_ENV` | `production` |
 | `ALLOWED_ORIGINS` | URL exacta de Netlify, por ejemplo `https://ecocampus.netlify.app` |
 | `SITE_URL` | La misma URL de Netlify, sin barra final |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` | Credenciales de Mailtrap |
-| `MAIL_FROM` | Remitente configurado en Mailtrap |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` | Credenciales de Mailtrap. En el plan gratuito de Render no sirven, porque bloquea los puertos SMTP |
+| `MAILTRAP_API_TOKEN`, `MAILTRAP_INBOX_ID` | Alternativa por HTTPS. Si están, el envío las usa y no toca SMTP |
+| `MAIL_FROM` | Remitente configurado en Mailtrap, sin comillas |
 | `ADMIN_EMAIL` | Correo que recibe los mensajes de contacto |
 | `MAIL_MIN_GAP_MS` | `10500` para respetar el límite de Mailtrap |
+
+El plan gratuito de Render bloquea la salida a los puertos `25`, `465` y `587`, así que SMTP no funciona ahí. Por eso el backend acepta la API de Mailtrap: si existen `MAILTRAP_API_TOKEN` y `MAILTRAP_INBOX_ID`, envía por HTTPS y las variables SMTP se pueden dejar vacías.
 
 Con `NODE_ENV=production`, los orígenes de `localhost` dejan de aceptarse automáticamente. Si `ALLOWED_ORIGINS` no coincide exactamente con el dominio de Netlify, el navegador va a mostrar errores de CORS.
 

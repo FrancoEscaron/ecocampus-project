@@ -14,6 +14,57 @@ const isSecure = () => {
 const hasSmtpConfig = () =>
     Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 
+const hasApiConfig = () =>
+    Boolean(process.env.MAILTRAP_API_TOKEN && process.env.MAILTRAP_INBOX_ID);
+
+const parseRemitente = (valor) => {
+    const texto = String(valor || "").trim();
+    const coincidencia = texto.match(/^(.*)<([^>]+)>$/);
+
+    if (coincidencia) {
+        return {
+            name: coincidencia[1].trim().replace(/^"|"$/g, ""),
+            email: coincidencia[2].trim()
+        };
+    }
+
+    return { email: texto };
+};
+
+const enviarPorApi = async ({ to, subject, text, html, replyTo }) => {
+    const respuesta = await fetch(
+        `https://sandbox.api.mailtrap.io/api/send/${encodeURIComponent(process.env.MAILTRAP_INBOX_ID)}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${process.env.MAILTRAP_API_TOKEN}`
+            },
+            body: JSON.stringify({
+                from: parseRemitente(getFrom()),
+                to: [{ email: to }],
+                subject,
+                text,
+                html,
+                reply_to: replyTo ? { email: replyTo } : undefined
+            }),
+            signal: AbortSignal.timeout(15000)
+        }
+    );
+
+    const datos = await respuesta.json().catch(() => null);
+
+    if (!respuesta.ok) {
+        const motivo = (Array.isArray(datos?.errors) && datos.errors.join(" "))
+            || datos?.message
+            || `HTTP ${respuesta.status}`;
+        throw new Error(motivo);
+    }
+
+    const ids = Array.isArray(datos?.message_ids) ? datos.message_ids : [];
+    return ids[0] || "api";
+};
+
 let transporte = null;
 
 const getTransporte = () => {
@@ -42,6 +93,18 @@ const sendMail = async ({ to, subject, text, html, replyTo }) => {
     if (!to) return { sent: false, reason: "sin destinatario" };
 
     const asunto = String(subject || "").replace(/[\r\n]+/g, " ").trim();
+
+    if (hasApiConfig()) {
+        try {
+            const messageId = await enviarPorApi({ to, subject: asunto, text, html, replyTo });
+            console.log(`[correo] Enviado a ${to} (${messageId})`);
+            return { sent: true, messageId };
+        } catch (error) {
+            console.error(`[correo] No se pudo enviar a ${to}: ${error.message}`);
+            return { sent: false, error: error.message };
+        }
+    }
+
     const transporteActual = getTransporte();
 
     if (!transporteActual) {
@@ -73,6 +136,8 @@ const getEsperaEntreEnvios = () => {
         const valor = Number(configurada);
         if (Number.isFinite(valor) && valor >= 0) return valor;
     }
+
+    if (hasApiConfig()) return 10500;
 
     const host = String(process.env.SMTP_HOST || "").toLowerCase();
     return host.includes("mailtrap") ? 10500 : 1100;
