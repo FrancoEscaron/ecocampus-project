@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: ecocampus-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/courses
+    envVars:
+      - key: NODE_VERSION
+        value: "22.22.0"
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 2h
+      - key: MAIL_MIN_GAP_MS
+        value: "10500"
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: SITE_URL
+        sync: false
