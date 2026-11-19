@@ -27,6 +27,7 @@ La base de datos está en MongoDB Atlas. La primera visita al backend puede tard
 
 - Inicio, catálogo de cursos, fichas públicas con metadatos y SEO por página.
 - Sección de impacto, preguntas frecuentes y formulario de contacto.
+- Asistente virtual EcoBot con Gemini, disponible desde un botón flotante en todo el sitio.
 - Registro e ingreso con correo y contraseña.
 
 ### Para usuarios
@@ -54,6 +55,7 @@ La base de datos está en MongoDB Atlas. La primera visita al backend puede tard
 | Base de datos | MongoDB con Mongoose 9 |
 | Autenticación | JWT y bcryptjs |
 | Correo | Nodemailer por SMTP y API HTTP de Mailtrap |
+| Asistente | Gemini con el SDK oficial `@google/genai` |
 | Archivos | Multer, guardados en `backend/uploads` |
 | Seguridad | Helmet, CORS, rate limit y validaciones |
 | Estilos | CSS propio, sin librerías de componentes |
@@ -86,6 +88,7 @@ ecocampus-project/
 - Node.js `^20.19.0` o `>=22.12.0` (recomendado: Node 22).
 - MongoDB local 6 o superior, o una base en MongoDB Atlas.
 - Cuenta de Mailtrap si se quieren ver los correos reales. Sin SMTP ni API configurados, los correos se imprimen en la consola del backend.
+- Clave gratuita de Google AI Studio si se quiere usar el asistente virtual. Sin `GEMINI_API_KEY`, el chat muestra un aviso de que no está disponible.
 
 ## Instalación local
 
@@ -157,6 +160,8 @@ El registro público siempre crea usuarios con rol `user`. Para tener un adminis
 | `MAIL_MIN_GAP_MS` | Espera entre envíos, en milisegundos | `10500` con Mailtrap, vacío en otros |
 | `MAILTRAP_API_TOKEN` | Token de la API de Mailtrap. Si existe, se envía por HTTPS en lugar de SMTP | El de Mailtrap |
 | `MAILTRAP_INBOX_ID` | Bandeja de Mailtrap que recibe los correos | El número de la bandeja |
+| `GEMINI_API_KEY` | Clave del asistente virtual. Se crea gratis en [AI Studio](https://aistudio.google.com/apikey) | `AIza...` |
+| `GEMINI_MODEL` | Modelo de Gemini que usa el asistente | `gemini-3.1-flash-lite` |
 
 ### Frontend (`frontend/.env`)
 
@@ -204,7 +209,7 @@ Si se empieza con una base vacía, el catálogo de acciones se crea solo al arra
 
 ### 2. Backend en Render
 
-El repositorio incluye `render.yaml`. La forma más rápida es elegir **New > Blueprint**, conectar el repositorio y aceptar la configuración: Render crea el servicio con la carpeta `backend`, `npm install`, `npm start` y Node 22. En ese mismo paso pide los valores de `MONGODB_URI`, `JWT_SECRET`, `ALLOWED_ORIGINS` y `SITE_URL`. Las variables de correo se agregan después en la pestaña **Environment**; si quedan vacías, los correos se imprimen en la consola del servicio.
+El repositorio incluye `render.yaml`. La forma más rápida es elegir **New > Blueprint**, conectar el repositorio y aceptar la configuración: Render crea el servicio con la carpeta `backend`, `npm install`, `npm start` y Node 22. En ese mismo paso pide los valores de `MONGODB_URI`, `JWT_SECRET`, `ALLOWED_ORIGINS` y `SITE_URL`. Las variables de correo y la clave `GEMINI_API_KEY` del asistente se agregan después en la pestaña **Environment**; si quedan vacías, los correos se imprimen en la consola del servicio y el chat avisa que no está disponible.
 
 Si todavía no creaste el sitio de Netlify, poné un valor provisorio en `ALLOWED_ORIGINS` y `SITE_URL` y actualizalo cuando tengas la URL definitiva. Render vuelve a desplegar al guardar los cambios.
 
@@ -281,3 +286,4 @@ Para presentar sin sorpresas conviene tener las dos variantes probadas: la de Ne
 - La vista previa al compartir en redes muestra los metadatos generales, no los de cada curso. Para eso haría falta prerenderizado o renderizado en el servidor.
 - El `sitemap.xml` queda pendiente hasta tener un dominio definitivo.
 - Las compras son simuladas: no se procesa dinero real.
+- El asistente virtual depende del plan gratuito de Gemini: tiene límites por minuto y por día. Si se agotan, el chat pide esperar un minuto.
