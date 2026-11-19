@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import AuthLayout from "./components/AuthLayout";
+import ChatWidget from "./components/ChatWidget";
 import Layout from "./components/Layout";
 import RutaPrivada from "./components/RutaPrivada";
 import ScrollToTop from "./components/ScrollToTop";
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/registro" element={<Registro />} />
         </Route>
       </Routes>
+      <ChatWidget />
     </>
   );
 }

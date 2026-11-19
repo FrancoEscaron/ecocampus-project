@@ -142,3 +142,17 @@ export const actualizarMensajeContacto = (id, read) =>
 
 export const eliminarMensajeContacto = (id) =>
   pedir(`/api/admin/contact/${id}`, { method: "DELETE" });
+
+export const enviarMensajeChat = async (mensaje, conversacionId) => {
+  const { respuesta, datos } = await pedir("/api/chat", {
+    method: "POST",
+    body: { mensaje, conversacionId },
+    auth: false,
+  });
+
+  if (!respuesta.ok) {
+    throw new Error(datos?.message || "No se pudo enviar el mensaje.");
+  }
+
+  return datos;
+};
