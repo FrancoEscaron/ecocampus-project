@@ -8,6 +8,7 @@ const helmet = require("helmet");
 
 const app = express();
 app.disable("x-powered-by");
+app.set("trust proxy", 1);
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
