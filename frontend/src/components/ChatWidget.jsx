@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { enviarMensajeChat } from "../api";
+import { calentarChat, enviarMensajeChat } from "../api";
 import "./ChatWidget.css";
 
 const MAX_CARACTERES = 500;
@@ -18,16 +18,27 @@ const SUGERENCIAS = [
   "¿Cómo obtengo mi certificado?",
 ];
 
+const armarHistorial = (mensajes) =>
+  mensajes
+    .filter((mensaje) => mensaje.id !== MENSAJE_INICIAL.id && !mensaje.error)
+    .map((mensaje) => ({
+      rol: mensaje.autor === "usuario" ? "usuario" : "bot",
+      texto: mensaje.texto,
+    }));
+
 export default function ChatWidget() {
   const location = useLocation();
   const [abierto, setAbierto] = useState(false);
   const [mensajes, setMensajes] = useState([MENSAJE_INICIAL]);
   const [texto, setTexto] = useState("");
-  const [conversacionId, setConversacionId] = useState(null);
   const [cargando, setCargando] = useState(false);
   const botonRef = useRef(null);
   const inputRef = useRef(null);
   const listaRef = useRef(null);
+
+  useEffect(() => {
+    calentarChat();
+  }, []);
 
   useEffect(() => {
     if (!abierto) return;
@@ -49,7 +60,6 @@ export default function ChatWidget() {
 
   const nuevaConversacion = () => {
     setMensajes([MENSAJE_INICIAL]);
-    setConversacionId(null);
     setTexto("");
     setCargando(false);
     inputRef.current?.focus();
@@ -70,12 +80,11 @@ export default function ChatWidget() {
     setCargando(true);
 
     try {
-      const datos = await enviarMensajeChat(limpio, conversacionId);
+      const datos = await enviarMensajeChat(limpio, armarHistorial(mensajes));
       setMensajes((previos) => [
         ...previos,
         { id: crypto.randomUUID(), autor: "bot", texto: datos.respuesta },
       ]);
-      setConversacionId(datos.conversacionId || null);
     } catch (error) {
       const aviso =
         error?.message && error.message !== "Failed to fetch"

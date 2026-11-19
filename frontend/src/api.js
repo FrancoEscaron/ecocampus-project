@@ -13,7 +13,7 @@ const redirigirAIngresar = () => {
   window.location.assign("/ingresar");
 };
 
-export const pedir = async (ruta, { method = "GET", body, headers = {}, auth = true } = {}) => {
+export const pedir = async (ruta, { method = "GET", body, headers = {}, auth = true, signal } = {}) => {
   const cabeceras = { ...headers };
   const token = getToken();
   const esFormData = body instanceof FormData;
@@ -27,6 +27,7 @@ export const pedir = async (ruta, { method = "GET", body, headers = {}, auth = t
     method,
     headers: cabeceras,
     body: body === undefined || body === null ? undefined : esFormData ? body : JSON.stringify(body),
+    signal,
   });
 
   if (respuesta.status === 401 && auth) {
@@ -143,16 +144,33 @@ export const actualizarMensajeContacto = (id, read) =>
 export const eliminarMensajeContacto = (id) =>
   pedir(`/api/admin/contact/${id}`, { method: "DELETE" });
 
-export const enviarMensajeChat = async (mensaje, conversacionId) => {
-  const { respuesta, datos } = await pedir("/api/chat", {
-    method: "POST",
-    body: { mensaje, conversacionId },
-    auth: false,
-  });
+export const enviarMensajeChat = async (mensaje, historial = []) => {
+  const control = new AbortController();
+  const temporizador = setTimeout(() => control.abort(), 20000);
 
-  if (!respuesta.ok) {
-    throw new Error(datos?.message || "No se pudo enviar el mensaje.");
+  try {
+    const { respuesta, datos } = await pedir("/api/chat", {
+      method: "POST",
+      body: { mensaje, historial },
+      auth: false,
+      signal: control.signal,
+    });
+
+    if (!respuesta.ok) {
+      throw new Error(datos?.message || "No se pudo enviar el mensaje.");
+    }
+
+    return datos;
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("El asistente tardó demasiado. Probá de nuevo en un momento.");
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(temporizador);
   }
-
-  return datos;
 };
+
+export const calentarChat = () =>
+  pedir("/api/chat/health", { auth: false }).catch(() => null);
