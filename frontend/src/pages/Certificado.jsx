@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { obtenerCertificado } from "../api";
+import useSeo from "../hooks/useSeo";
 import { getApiErrorMessage } from "../utils/apiError";
 import { formatDate } from "../utils/format";
 
@@ -9,6 +10,14 @@ export default function Certificado() {
   const [certificado, setCertificado] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
+
+  useSeo({
+    titulo: "Certificado | EcoCampus",
+    descripcion: "Certificado de finalización de un curso de EcoCampus.",
+    ruta: `/panel/certificado/${courseId}`,
+    noindex: true,
+  });
+
 
   useEffect(() => {
     let activo = true;

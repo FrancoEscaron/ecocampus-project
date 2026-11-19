@@ -8,12 +8,21 @@ import PointsHistory from "../components/PointsHistory";
 import PurchaseItem from "../components/PurchaseItem";
 import StatCard from "../components/StatCard";
 import useCarga from "../hooks/useCarga";
+import useSeo from "../hooks/useSeo";
 import { downloadCsv } from "../utils/csv";
 import { formatShortDate } from "../utils/format";
 import { clearSession, updateUser } from "../utils/session";
 
 export default function Panel() {
   const navigate = useNavigate();
+
+  useSeo({
+    titulo: "Mi panel | EcoCampus",
+    descripcion: "Tu actividad, tus Eco-Points y tus cursos en un solo lugar.",
+    ruta: "/panel",
+    noindex: true,
+  });
+
   const [cursoAbierto, setCursoAbierto] = useState(null);
   const { datos, error, recargar } = useCarga(
     obtenerPanel,

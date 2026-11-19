@@ -27,6 +27,7 @@ import PurchasesTable from "../components/admin/PurchasesTable";
 import ConfirmDialog from "../components/ConfirmDialog";
 import Toast from "../components/Toast";
 import useCarga from "../hooks/useCarga";
+import useSeo from "../hooks/useSeo";
 import { formatUnitRate, getActionUnit } from "../utils/actions";
 import { getApiErrorMessage } from "../utils/apiError";
 import {
@@ -76,6 +77,13 @@ export default function Admin() {
   const [versionCurso, setVersionCurso] = useState(0);
   const [versionAccion, setVersionAccion] = useState(0);
   const [versionFaq, setVersionFaq] = useState(0);
+
+  useSeo({
+    titulo: "Panel de administración | EcoCampus",
+    descripcion: "Gestión de cursos, acciones, entregas y mensajes de EcoCampus.",
+    ruta: "/admin",
+    noindex: true,
+  });
   const [avisos, setAvisos] = useState({});
   const [toast, setToast] = useState(null);
   const [confirmacion, setConfirmacion] = useState(null);
