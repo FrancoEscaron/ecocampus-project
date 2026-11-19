@@ -53,7 +53,7 @@ La base de datos está en MongoDB Atlas. La primera visita al backend puede tard
 | Backend | Node.js, Express 5, CommonJS |
 | Base de datos | MongoDB con Mongoose 9 |
 | Autenticación | JWT y bcryptjs |
-| Correo | Nodemailer (Mailtrap para pruebas) |
+| Correo | Nodemailer por SMTP y API HTTP de Mailtrap |
 | Archivos | Multer, guardados en `backend/uploads` |
 | Seguridad | Helmet, CORS, rate limit y validaciones |
 | Estilos | CSS propio, sin librerías de componentes |
@@ -66,6 +66,7 @@ ecocampus-project/
 │   ├── middleware/       Autenticación de usuario y administrador
 │   ├── models/           Esquemas de MongoDB
 │   ├── routes/           Endpoints de la API
+│   ├── scripts/          Copia de datos locales a Atlas
 │   ├── utils/            Correos, validaciones y catálogo de acciones
 │   ├── uploads/          Fotos de las evidencias
 │   └── server.js         Punto de entrada del backend
@@ -84,7 +85,7 @@ ecocampus-project/
 
 - Node.js `^20.19.0` o `>=22.12.0` (recomendado: Node 22).
 - MongoDB local 6 o superior, o una base en MongoDB Atlas.
-- Cuenta de Mailtrap si se quieren ver los correos reales. Sin SMTP configurado, los correos se imprimen en la consola del backend.
+- Cuenta de Mailtrap si se quieren ver los correos reales. Sin SMTP ni API configurados, los correos se imprimen en la consola del backend.
 
 ## Instalación local
 
@@ -222,7 +223,7 @@ Si preferís crearlo a mano, usá estos valores:
 | `JWT_SECRET` | Secreto nuevo, largo y distinto del local |
 | `JWT_EXPIRES_IN` | `2h` |
 | `NODE_ENV` | `production` |
-| `ALLOWED_ORIGINS` | URL exacta de Netlify, por ejemplo `https://ecocampus.netlify.app` |
+| `ALLOWED_ORIGINS` | URL exacta de Netlify, por ejemplo `https://eco-campus.netlify.app` |
 | `SITE_URL` | La misma URL de Netlify, sin barra final |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` | Credenciales de Mailtrap. En el plan gratuito de Render no sirven, porque bloquea los puertos SMTP |
 | `MAILTRAP_API_TOKEN`, `MAILTRAP_INBOX_ID` | Alternativa por HTTPS. Si están, el envío las usa y no toca SMTP |
@@ -245,10 +246,10 @@ El repositorio incluye `netlify.toml`, que define la base `frontend`, el build, 
 
 1. Crear un sitio nuevo desde el repositorio.
 2. Dejar **Base directory** vacío y no cambiar **Build command** ni **Publish directory**: se toman del archivo.
-3. Agregar la variable de entorno `VITE_API_URL` con la URL del backend en Render, por ejemplo `https://ecocampus-api.onrender.com`. Sin `/api` y sin barra final.
+3. Agregar la variable de entorno `VITE_API_URL` con la URL del backend en Render, por ejemplo `https://ecocampus-api-dyis.onrender.com`. Sin `/api` y sin barra final.
 4. Volver a desplegar después de cambiar variables: Vite las incorpora en el momento del build.
 
-Anotá la URL que te asigna Netlify (por ejemplo `https://ecocampus.netlify.app`) y volvé a Render para cargarla en `ALLOWED_ORIGINS` y `SITE_URL`.
+Anotá la URL que te asigna Netlify (por ejemplo `https://eco-campus.netlify.app`) y volvé a Render para cargarla en `ALLOWED_ORIGINS` y `SITE_URL`.
 
 Si configurás el sitio a mano, los valores son **Base directory** `frontend`, **Build command** `npm run build`, **Publish directory** `dist` y `NODE_VERSION=22`.
 
