@@ -38,7 +38,7 @@ export default function Ingresar() {
           texto: `¡Bienvenido ${sesion.user.name}!`,
         });
         window.setTimeout(() => {
-          const destino = location.state?.from || "/cursos";
+          const destino = location.state?.from || "/";
           const destinoState = { ...location.state };
           delete destinoState.from;
           navigate(destino, {
