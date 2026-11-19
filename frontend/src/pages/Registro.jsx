@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registrarUsuario } from "../api";
 import useForm from "../hooks/useForm";
+import useSeo from "../hooks/useSeo";
 import { getApiErrorMessage } from "../utils/apiError";
 
 export default function Registro() {
@@ -14,6 +15,13 @@ export default function Registro() {
   const [aviso, setAviso] = useState({ texto: "", tipo: "" });
   const [enviando, setEnviando] = useState(false);
   const navigate = useNavigate();
+
+  useSeo({
+    titulo: "Crear cuenta | EcoCampus",
+    descripcion: "Registrate en EcoCampus para validar acciones sustentables y canjearlas por cursos.",
+    ruta: "/registro",
+    noindex: true,
+  });
 
   const registrar = async (evento) => {
     evento.preventDefault();

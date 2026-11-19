@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { iniciarSesion } from "../api";
 import useForm from "../hooks/useForm";
+import useSeo from "../hooks/useSeo";
 import { getApiErrorMessage } from "../utils/apiError";
 import { setSession } from "../utils/session";
 
@@ -11,6 +12,13 @@ export default function Ingresar() {
   const [enviando, setEnviando] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useSeo({
+    titulo: "Iniciar sesión | EcoCampus",
+    descripcion: "Ingresá a tu cuenta de EcoCampus para validar acciones y desbloquear cursos.",
+    ruta: "/ingresar",
+    noindex: true,
+  });
 
   const ingresar = async (evento) => {
     evento.preventDefault();
