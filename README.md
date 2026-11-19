@@ -16,10 +16,10 @@ La idea central es simple: **aprender mientras cambiás el mundo**. En lugar de 
 
 | Servicio | Enlace |
 | --- | --- |
-| Frontend (Netlify) | _Pendiente de despliegue_ |
-| API (Render) | _Pendiente de despliegue_ |
+| Frontend (Netlify) | https://eco-campus.netlify.app |
+| API (Render) | https://ecocampus-api-dyis.onrender.com |
 
-Cuando el despliegue esté terminado, reemplazar las dos filas por los enlaces reales. Hasta entonces, la aplicación se puede usar en local con los pasos de abajo.
+La base de datos está en MongoDB Atlas. La primera visita al backend puede tardar entre 30 y 60 segundos porque el plan gratuito de Render suspende el servicio por inactividad.
 
 ## Funcionalidades principales
 
@@ -251,12 +251,11 @@ El archivo `frontend/public/_redirects` repite la regla `/* /index.html 200` com
 
 ### 4. Después de desplegar
 
-1. Abrir `https://TU-API.onrender.com/api/courses` y confirmar que devuelve JSON.
+1. Abrir `https://ecocampus-api-dyis.onrender.com/api/courses` y confirmar que devuelve JSON.
 2. Abrir el sitio de Netlify y comprobar que el catálogo carga.
 3. Registrarse y revisar el correo en Mailtrap.
 4. Ingresar con la cuenta de administrador y recorrer las pestañas.
-5. Si hay errores de CORS, revisar que `ALLOWED_ORIGINS` tenga el dominio exacto de Netlify.
-6. Reemplazar la tabla de **Demo en línea** de este README por los enlaces definitivos.
+5. Si hay errores de CORS, revisar que `ALLOWED_ORIGINS` tenga el dominio exacto de Netlify, sin barra final.
 
 ## Uso local como respaldo
 
