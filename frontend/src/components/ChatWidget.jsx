@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { calentarChat, enviarMensajeChat } from "../api";
+import ChatIcon from "./ChatIcon";
 import "./ChatWidget.css";
 
 const MAX_CARACTERES = 500;
@@ -115,7 +116,7 @@ export default function ChatWidget() {
         aria-expanded={abierto}
         aria-controls="chat-panel"
       >
-        {abierto ? "×" : "💬"}
+        {abierto ? "×" : <ChatIcon />}
       </button>
 
       {abierto && (

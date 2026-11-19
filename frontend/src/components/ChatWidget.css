@@ -28,6 +28,12 @@
     box-shadow: 0 16px 34px rgba(6, 44, 34, 0.34);
 }
 
+.chat-icono {
+    display: block;
+    width: 31px;
+    height: 31px;
+}
+
 .chat-boton:focus-visible {
     outline: 3px solid var(--color-nav);
     outline-offset: 3px;
@@ -285,6 +291,11 @@
         width: 56px;
         height: 56px;
         font-size: 1.55rem;
+    }
+
+    .chat-icono {
+        width: 29px;
+        height: 29px;
     }
 
     .chat-ventana {
