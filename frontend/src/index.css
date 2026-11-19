@@ -2533,7 +2533,7 @@ textarea::placeholder {
 
 /* Media Queries */
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
     .nav-icon {
         display: none;
     }
@@ -2585,7 +2585,9 @@ textarea::placeholder {
     .brand-name {
         display: none;
     }
+}
 
+@media (min-width: 768px) {
     .hero-title {
         font-size: 3rem;
     }
@@ -2622,7 +2624,7 @@ textarea::placeholder {
 
 }
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
     .main-nav.is-open {
         max-height: calc(100vh - 4.5rem);
         overflow-y: auto;
@@ -2641,6 +2643,13 @@ textarea::placeholder {
         outline-color: #FFFFFF;
     }
 
+    .nav-icon:focus-visible,
+    .main-nav a:focus-visible {
+        outline-color: #FFFFFF;
+    }
+}
+
+@media (max-width: 767px) {
     .admin-form-grid {
         grid-template-columns: 1fr;
     }
@@ -2654,11 +2663,6 @@ textarea::placeholder {
     .footer-cont .networks a {
         padding: 0.35rem 0.45rem;
         margin: 0 -0.45rem;
-    }
-
-    .nav-icon:focus-visible,
-    .main-nav a:focus-visible {
-        outline-color: #FFFFFF;
     }
 }
 
