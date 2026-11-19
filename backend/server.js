@@ -42,6 +42,11 @@ app.use(cors({
 
 app.use(express.json({ limit: "1mb" }));
 
+app.use("/api", (req, res, next) => {
+    res.set("Cache-Control", "no-store");
+    next();
+});
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
     setHeaders: (res) => {
         res.setHeader("X-Content-Type-Options", "nosniff");
