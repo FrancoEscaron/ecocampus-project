@@ -2078,7 +2078,7 @@ textarea::placeholder {
     flex-wrap: wrap;
 }
 
-.course-modal-box > .action-msg {
+.course-modal-box .action-msg {
     margin-bottom: 1rem;
 }
 

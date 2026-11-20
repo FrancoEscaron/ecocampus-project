@@ -125,18 +125,20 @@ export default function CursoDetalle() {
           )}
           <p className="course-detail-cost">Costo: {getCourseCostLabel(curso)}</p>
 
-          {Array.isArray(curso.modules) && curso.modules.length > 0 && (
-            <div className="course-detail-modules">
-              <h2 className="course-detail-modules-title">Módulos del curso</h2>
-              <ol className="course-detail-module-list">
-                {curso.modules.map((modulo) => (
-                  <li className="course-detail-module-item" key={modulo._id}>
-                    {modulo.title}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
+          {!tieneAcceso &&
+            Array.isArray(curso.modules) &&
+            curso.modules.length > 0 && (
+              <div className="course-detail-modules">
+                <h2 className="course-detail-modules-title">Módulos del curso</h2>
+                <ol className="course-detail-module-list">
+                  {curso.modules.map((modulo) => (
+                    <li className="course-detail-module-item" key={modulo._id}>
+                      {modulo.title}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
 
           <div className="course-detail-actions">
             {!usuario && (
