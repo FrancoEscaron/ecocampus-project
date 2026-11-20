@@ -72,6 +72,7 @@ export default function Inicio() {
           </article>
           <article className="how-card">
             <h3>¡Desbloquea tu aprendizaje!</h3>
+            <p>Accede a tu curso y comienza a aprender mientras contribuyes al cambio</p>
           </article>
         </div>
       </section>
