@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import {
+  getCourseCostLabel,
   getCourseLevelLabel,
   getCoursePaymentLabel,
   getCoursePaymentType,
@@ -42,6 +43,7 @@ export default function CourseCard({ curso, comprado = false }) {
           <span className="course-name-btn">{curso.title}</span>
         </h2>
         <p className="course-duration">Duración: {curso.duration}</p>
+        <p className="course-card-cost">Costo: {getCourseCostLabel(curso)}</p>
         <p className="course-description">{curso.description}</p>
       </div>
     </Link>

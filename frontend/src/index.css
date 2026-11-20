@@ -696,6 +696,13 @@ h4 {
     margin-bottom: 0.5rem;
 }
 
+.course-card-cost {
+    font-weight: 700;
+    color: var(--color-strong-name);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
 .course-description {
     color: var(--color-card-desc);
     font-size: 0.95rem;
