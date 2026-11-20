@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { obtenerCurso } from "../api";
 import CourseContent from "../components/CourseContent";
 import useCarga from "../hooks/useCarga";
@@ -26,6 +26,7 @@ const recortarTexto = (texto = "", maximo = MAX_DESCRIPCION_SEO) => {
 
 export default function CursoDetalle() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [usuario, setUsuario] = useState(getUser);
 
   const cargarCurso = useCallback(() => obtenerCurso(id), [id]);
@@ -72,11 +73,6 @@ export default function CursoDetalle() {
     jsonLd,
     noindex: !cargando && !curso,
   });
-
-  const rutaIngreso = {
-    pathname: "/ingresar",
-    state: { from: `/cursos/${id}` },
-  };
 
   let contenido = null;
 
@@ -142,9 +138,15 @@ export default function CursoDetalle() {
 
           <div className="course-detail-actions">
             {!usuario && (
-              <Link className="submit-btn" to={rutaIngreso}>
+              <button
+                type="button"
+                className="submit-btn"
+                onClick={() =>
+                  navigate("/ingresar", { state: { from: `/cursos/${id}` } })
+                }
+              >
                 Iniciar sesión para desbloquear el curso
-              </Link>
+              </button>
             )}
           </div>
 
