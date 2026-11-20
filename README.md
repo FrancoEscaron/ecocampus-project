@@ -68,7 +68,6 @@ ecocampus-project/
 │   ├── middleware/       Autenticación de usuario y administrador
 │   ├── models/           Esquemas de MongoDB
 │   ├── routes/           Endpoints de la API
-│   ├── scripts/          Copia de datos locales a Atlas
 │   ├── utils/            Correos, validaciones y catálogo de acciones
 │   ├── uploads/          Fotos de las evidencias
 │   └── server.js         Punto de entrada del backend
@@ -194,18 +193,7 @@ La combinación recomendada es **Netlify para el frontend**, **Render para el ba
 4. Copiar la cadena de conexión y agregar el nombre de la base al final: `.../ecocampus`.
 5. Guardar esa cadena para usarla como `MONGODB_URI` en Render.
 
-Para que la demo tenga los mismos cursos, acciones y cuentas que en local, conviene importar los datos. El repositorio incluye un script que no necesita las herramientas de MongoDB instaladas:
-
-1. Guardar la cadena de Atlas en `backend/.env.atlas`, en la variable `MONGODB_URI_ATLAS`. Ese archivo está ignorado por git.
-2. Desde la carpeta `backend`, ejecutar:
-
-```bash
-node scripts/copy-to-atlas.js
-```
-
-El script lee la base local desde `backend/.env` (`MONGODB_URI`), copia todas las colecciones a la base indicada en la cadena de Atlas y muestra solo los conteos, nunca las credenciales. Las colecciones que ya tienen datos en el destino se omiten; `node scripts/copy-to-atlas.js --reset` las vacía y las vuelve a copiar. Los índices únicos se crean solos cuando el backend arranca por primera vez contra Atlas.
-
-Si se empieza con una base vacía, el catálogo de acciones se crea solo al arrancar el backend, pero los cursos, las preguntas frecuentes y las cuentas se tienen que crear desde la web.
+La base de desarrollo y la de Atlas ya tienen los mismos cursos, acciones y cuentas. Si se empieza con una base vacía, el catálogo de acciones se crea solo al arrancar el backend, pero los cursos, las preguntas frecuentes y las cuentas se tienen que crear desde la web.
 
 ### 2. Backend en Render
 
