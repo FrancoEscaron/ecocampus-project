@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useCallback, useMemo, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { obtenerCurso } from "../api";
-import CourseModal from "../components/CourseModal";
+import CourseContent from "../components/CourseContent";
 import useCarga from "../hooks/useCarga";
 import useSeo from "../hooks/useSeo";
 import {
@@ -26,12 +26,7 @@ const recortarTexto = (texto = "", maximo = MAX_DESCRIPCION_SEO) => {
 
 export default function CursoDetalle() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [usuario, setUsuario] = useState(getUser);
-  const [modalAbierto, setModalAbierto] = useState(
-    () => Boolean(location.state?.abrirCurso && getUser()),
-  );
 
   const cargarCurso = useCallback(() => obtenerCurso(id), [id]);
   const { datos, cargando, error } = useCarga(
@@ -39,12 +34,6 @@ export default function CursoDetalle() {
     "No encontramos este curso. Puede que ya no esté disponible o haya sido archivado.",
   );
   const curso = datos && typeof datos === "object" ? datos : null;
-
-  useEffect(() => {
-    if (!location.state?.abrirCurso) return;
-
-    navigate(location.pathname, { replace: true, state: null });
-  }, [location.pathname, location.state, navigate]);
 
   const tieneAcceso =
     Boolean(curso) &&
@@ -84,25 +73,10 @@ export default function CursoDetalle() {
     noindex: !cargando && !curso,
   });
 
-  const abrirCurso = () => {
-    const usuarioActual = getUser();
-
-    if (!usuarioActual) {
-      navigate("/ingresar", {
-        state: { from: `/cursos/${id}`, abrirCurso: true },
-      });
-      return;
-    }
-
-    setUsuario(usuarioActual);
-    setModalAbierto(true);
+  const rutaIngreso = {
+    pathname: "/ingresar",
+    state: { from: `/cursos/${id}` },
   };
-
-  const etiquetaBoton = tieneAcceso
-    ? "Ver contenido del curso"
-    : usuario
-      ? "Desbloquear curso"
-      : "Iniciar sesión para desbloquear el curso";
 
   let contenido = null;
 
@@ -121,7 +95,8 @@ export default function CursoDetalle() {
     const tipoPago = getCoursePaymentType(curso);
 
     contenido = (
-      <article className="course-detail">
+      <>
+        <article className="course-detail">
         <div className="course-detail-media">
           <img
             src={resolveAssetUrl(curso.image)}
@@ -164,9 +139,11 @@ export default function CursoDetalle() {
           )}
 
           <div className="course-detail-actions">
-            <button type="button" className="submit-btn" onClick={abrirCurso}>
-              {etiquetaBoton}
-            </button>
+            {!usuario && (
+              <Link className="submit-btn" to={rutaIngreso}>
+                Iniciar sesión para desbloquear el curso
+              </Link>
+            )}
           </div>
 
           {!usuario && (
@@ -184,26 +161,30 @@ export default function CursoDetalle() {
           )}
         </div>
       </article>
-    );
+
+      {usuario && (
+        <section className="course-content-section" id="contenido-curso">
+          <h2 className="course-content-title">
+            {tieneAcceso ? "Contenido del curso" : "Desbloquear curso"}
+          </h2>
+          <CourseContent
+            curso={curso}
+            usuario={usuario}
+            onActualizar={() => setUsuario(getUser())}
+          />
+        </section>
+      )}
+    </>
+  );
   }
 
-  return (
-    <>
+  return (    <>
       <section className="section course-detail-section" id="curso-detalle">
         <Link className="course-detail-back" to="/cursos">
           ← Volver a cursos
         </Link>
         {contenido}
       </section>
-
-      {modalAbierto && curso && usuario && (
-        <CourseModal
-          curso={curso}
-          usuario={usuario}
-          onCerrar={() => setModalAbierto(false)}
-          onActualizar={() => setUsuario(getUser())}
-        />
-      )}
     </>
   );
 }

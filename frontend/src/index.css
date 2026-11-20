@@ -3336,3 +3336,53 @@ textarea::placeholder {
         print-color-adjust: exact;
     }
 }
+
+.module-video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radio-sm);
+    background: #000;
+    margin: 1rem 0;
+}
+
+.module-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.module-video-fallback {
+    margin: 1rem 0;
+    padding: 0.8rem;
+    background: rgba(6, 44, 34, 0.05);
+    border-radius: var(--radio-sm);
+}
+
+.course-content-section {
+    margin-top: 2.5rem;
+}
+
+.course-content-title {
+    font-size: 1.6rem;
+    color: var(--color-title-course);
+    margin-bottom: 1rem;
+}
+
+.course-content-panel {
+    padding: 1.5rem;
+    background-color: var(--color-cards);
+    border-radius: var(--radio);
+    box-shadow: var(--shadow);
+}
+
+.course-modal-box .course-content-panel {
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
